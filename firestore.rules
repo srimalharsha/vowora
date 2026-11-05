@@ -1,30 +1,56 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-
     function isVoworaAdmin() {
       return request.auth != null
         && request.auth.token.email == "srimalharsha@gmail.com";
     }
 
     match /invitations/{invitationId} {
-      // Admin can read invitations they created; visitors can read active cards.
       allow get, list: if
         (isVoworaAdmin() && resource.data.createdBy == request.auth.uid)
         || resource.data.isActive == true;
-
-      // Admin can create a card only under their own account.
       allow create: if isVoworaAdmin()
         && request.resource.data.createdBy == request.auth.uid;
-
-      // Admin can edit only their own cards and cannot transfer ownership.
       allow update: if isVoworaAdmin()
         && resource.data.createdBy == request.auth.uid
         && request.resource.data.createdBy == request.auth.uid;
-
-      // Admin can delete only their own cards.
       allow delete: if isVoworaAdmin()
         && resource.data.createdBy == request.auth.uid;
+    }
+
+    // A private, unguessable token is the couple's master link.
+    match /couplePortals/{portalToken} {
+      allow get: if true;
+      allow list: if isVoworaAdmin()
+        || resource.data.expiresAt <= request.time;
+      allow create, update, delete: if isVoworaAdmin();
+
+      match /guests/{guestId} {
+        function portalExists() {
+          return exists(/databases/$(database)/documents/couplePortals/$(portalToken));
+        }
+        function portalActive() {
+          return portalExists()
+            && get(/databases/$(database)/documents/couplePortals/$(portalToken)).data.expiresAt > request.time;
+        }
+        allow get, list: if portalActive();
+        allow create: if portalActive()
+          && request.resource.data.guestName is string
+          && request.resource.data.guestName.size() > 0
+          && request.resource.data.guestName.size() <= 90
+          && request.resource.data.familyNames is string
+          && request.resource.data.rsvpStatus == "pending"
+          && request.resource.data.attendeeCount == 0;
+        allow update: if portalActive()
+          && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(["rsvpStatus", "attendeeCount", "rsvpAt"])
+          && request.resource.data.rsvpStatus in ["yes", "no"]
+          && request.resource.data.attendeeCount is int
+          && request.resource.data.attendeeCount >= 0
+          && request.resource.data.attendeeCount <= 20;
+        allow delete: if isVoworaAdmin();
+      }
     }
   }
 }
