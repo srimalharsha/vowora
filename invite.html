@@ -105,7 +105,7 @@ closing:{title:"Be There With Us",caption:"Your presence will make our day compl
 };
 function cartoon(kind){
 const bride=esc(w?.brideName||"Bride"),groom=esc(w?.groomName||"Groom");
-return \`<svg class="kind-\${kind} vowora-cinematic-art" viewBox="0 0 960 620" role="img" aria-label="Elegant illustrated South Asian bride and groom in a palace garden">
+return `<svg class="kind-${kind} vowora-cinematic-art" viewBox="0 0 960 620" role="img" aria-label="Elegant illustrated South Asian bride and groom in a palace garden">
 <defs>
  <linearGradient id="vSky" x2="0" y2="1"><stop stop-color="#f8e7dc"/><stop offset=".56" stop-color="#f9e8dc"/><stop offset="1" stop-color="#f5d9c8"/></linearGradient>
  <linearGradient id="vGround" x2="0" y2="1"><stop stop-color="#8b9c79"/><stop offset="1" stop-color="#405b4d"/></linearGradient>
@@ -199,7 +199,7 @@ return \`<svg class="kind-\${kind} vowora-cinematic-art" viewBox="0 0 960 620" r
 <g fill="#fff0df" opacity=".8"><circle cx="280" cy="340" r="4"/><circle cx="690" cy="280" r="5"/><circle cx="340" cy="440" r="3"/><circle cx="660" cy="450" r="4"/><circle cx="470" cy="180" r="3"/></g>
 <g class="floating-petals" fill="#e9a9b9" opacity=".9"><path d="M320 290q-20-24 3-35 15 20-3 35z"/><path d="M680 340q-20-24 3-35 15 20-3 35z"/><path d="M350 175q-20-24 3-35 15 20-3 35z"/></g>
 <g fill="#fff8eb" opacity=".65" font-family="Georgia,serif" text-anchor="middle"><text x="480" y="570" font-size="15" letter-spacing="5">A CELEBRATION OF LOVE</text></g>
-</svg>\`;
+</svg>`;
 }
 function renderStory(){if(!storyItems.length)return;const item=storyCatalog[storyItems[storyIndex]]||storyCatalog.intro;$("storyArt").innerHTML=cartoon(item.kind);applyCharacterPreset();$("storyTitle").textContent=item.title;$("storyCaption").textContent=item.caption;$("storyProgress").innerHTML=storyItems.map((_,i)=>"<i class='"+(i===storyIndex?"active":"")+"'></i>").join("");$("storyPause").textContent=storyPaused?"▶ Play":"Ⅱ Pause"}
 function stopStory(){if(storyTimer){clearInterval(storyTimer);storyTimer=null}}
