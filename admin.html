@@ -27,7 +27,7 @@ button:disabled{opacity:.6;cursor:wait}.login-btn{width:100%;margin-top:20px}
 .inv-card{border:1px solid #eadbd5;border-radius:14px;overflow:hidden;background:#fff}.inv-card img{width:100%;height:160px;object-fit:cover;background:#f8eaf0}.inv-info{padding:13px}.inv-info h3{font-size:16px;margin:0 0 6px}.inv-info p{font-size:13px;margin:5px 0}.card-actions{display:flex;gap:8px;margin-top:12px}.card-actions button{flex:1;padding:9px 7px;font-size:12px}
 .status{display:inline-block;border-radius:20px;padding:4px 9px;background:#edf8ef;color:#246b36;font-size:11px}.status.off{background:#f4eeee;color:#805d5d}
 .preview{display:none;width:100%;max-height:230px;object-fit:contain;border-radius:10px;margin-top:12px;background:#faf5f5}
-.small{font-size:12px;margin-top:28px;color:#8c817b;text-align:center}
+ .invitation-art{min-height:270px;padding:18px;display:grid;place-items:center;background:linear-gradient(135deg,#ead9c7,#fff5eb,#d8c1a7)}.invitation-paper{width:84%;min-height:230px;padding:22px 12px;background:#fffdf8;border:5px double #c5a36f;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#795b39;box-shadow:0 12px 28px #0002}.invitation-paper.theme-blush{background:#fff9fa;border-color:#c58c9e;color:#86536a}.invitation-paper.theme-botanical{background:#fbfff7;border-color:#87977a;color:#52634c}.invitation-paper.theme-modern{background:#fff;border:1px solid #302a27;color:#302a27}.invitation-paper .couple{font:italic 29px Georgia,serif;margin:16px 0;line-height:1.25}.invitation-paper .details{font:12px/1.8 Arial;margin-top:12px}.invitation-paper .message{font:italic 12px/1.6 Georgia,serif;margin-top:12px}.small{font-size:12px;margin-top:28px;color:#8c817b;text-align:center}
 @media(max-width:600px){body{padding:10px}.panel{margin:8px auto;padding:20px 16px}.form-grid{grid-template-columns:1fr}.full{grid-column:auto}.tabs button{flex:1}.brand strong{font-size:30px}}
 </style>
 </head>
@@ -60,14 +60,13 @@ button:disabled{opacity:.6;cursor:wait}.login-btn{width:100%;margin-top:20px}
 
     <section id="addTab" class="tab-panel">
       <h2 id="formHeading">අලුත් Invitation Card එකක් එකතු කරන්න</h2>
-      <p>පහත විස්තර පුරවා Save කළ විට Invitation Card එක Firestore හි සුරැකේ.</p>
+      <p>නම් ඇතුළත් කරන විට Invitation Card Preview එක ස්වයංක්‍රීයව සකස් වේ.</p>
       <form id="inviteForm">
         <div class="form-grid">
-          <div><label for="title">Invitation නම *</label><input id="title" maxlength="90" placeholder="උදා: Elegant Wedding" required></div>
+          <div><label for="brideName">මනාලියගේ නම *</label><input id="brideName" maxlength="60" required></div><div><label for="groomName">මනාලයාගේ නම *</label><input id="groomName" maxlength="60" required></div><div><label for="title">Invitation නම *</label><input id="title" maxlength="90" placeholder="Our Wedding Invitation" required></div>
           <div><label for="category">Category *</label><select id="category" required><option value="wedding">Wedding</option><option value="engagement">Engagement</option><option value="birthday">Birthday</option><option value="anniversary">Anniversary</option><option value="other">Other</option></select></div>
-          <div><label for="price">මිල (රු.)</label><input id="price" type="number" min="0" step="0.01" placeholder="උදා: 2500"></div>
-          <div><label for="imageUrl">Card පින්තූර URL *</label><input id="imageUrl" type="url" placeholder="https://..." required></div>
-          <div class="full"><img id="imagePreview" class="preview" alt="Invitation preview"></div>
+          <div><label for="eventDate">උත්සව දිනය</label><input id="eventDate" type="date"></div><div><label for="eventTime">වේලාව</label><input id="eventTime" type="time"></div><div class="full"><label for="venue">උත්සව ස්ථානය</label><input id="venue" maxlength="180"></div><div><label for="theme">Card Design එක</label><select id="theme"><option value="classic">Classic Gold</option><option value="blush">Blush Romance</option><option value="botanical">Botanical Green</option><option value="modern">Modern Minimal</option></select></div><div><label for="price">මිල (රු.)</label><input id="price" type="number" min="0" step="0.01"></div>
+          <div class="full"><label for="imageUrl">පසුබිම් පින්තූර URL (අත්‍යවශ්‍ය නැත)</label><input id="imageUrl" type="url" placeholder="https://..."></div><div class="full"><h2 style="text-align:center">Live Invitation Preview</h2><div id="livePreview"></div></div>
           <div class="full"><label for="description">විස්තර</label><textarea id="description" rows="4" maxlength="1000" placeholder="Invitation එක පිළිබඳ විස්තර..."></textarea></div>
           <div class="full"><label><input id="isActive" type="checkbox" checked style="width:auto;margin-right:8px"> Website එකේ පෙන්වන්න (Active)</label></div>
         </div>
@@ -98,6 +97,9 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const $ = id => document.getElementById(id);
 let editingId = null;
+function makeInvitationMarkup(x){const t=["classic","blush","botanical","modern"].includes(x.theme)?x.theme:"classic";const esc=v=>String(v||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));const dt=x.eventDate?new Date(x.eventDate+"T00:00:00").toLocaleDateString("en-GB",{day:"2-digit",month:"long",year:"numeric"}):"";const d=[dt,x.eventTime||"",x.venue||""].filter(Boolean).map(esc).join("<br>");return '<div class="invitation-art"><div class="invitation-paper theme-'+t+'"><div>TOGETHER WITH OUR FAMILIES</div><div style="margin-top:12px">REQUEST THE PLEASURE OF YOUR COMPANY</div><div class="couple">'+esc(x.brideName)+' &amp; '+esc(x.groomName)+'</div><div>JOYFULLY INVITE YOU TO CELEBRATE</div><div class="details">'+(d||"YOUR SPECIAL DAY")+'</div>'+(x.description?'<div class="message">'+esc(x.description)+'</div>':"")+'</div></div>';}
+function updateLivePreview(){const x={};["brideName","groomName","eventDate","eventTime","venue","theme","description"].forEach(id=>{const e=document.getElementById(id);x[id]=e?e.value:"";});const p=document.getElementById("livePreview");if(p)p.innerHTML=makeInvitationMarkup(x);}
+document.getElementById("inviteForm").addEventListener("input",updateLivePreview);document.getElementById("inviteForm").addEventListener("change",updateLivePreview);
 
 function showLoginMessage(text){$('message').textContent=text;$('message').className='';$('message').style.display='block';}
 function showFormMessage(text,ok=false){$('formMessage').textContent=text;$('formMessage').style.color=ok?'#246b36':'#a83c45';}
@@ -107,7 +109,7 @@ function openTab(id){
 }
 document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>openTab(b.dataset.tab)));
 function resetForm(){
-  $('inviteForm').reset();$('isActive').checked=true;editingId=null;
+  $('inviteForm').reset();$('isActive').checked=true;editingId=null;updateLivePreview();
   $('formHeading').textContent='අලුත් Invitation Card එකක් එකතු කරන්න';
   $('saveBtn').textContent='Save Invitation Card';$('imagePreview').style.display='none';$('imagePreview').src='';
   showFormMessage('');
@@ -145,7 +147,7 @@ async function loadInvitations(){
     list.replaceChildren();
     items.forEach(item=>{
       const card=document.createElement('article');card.className='inv-card';
-      const img=document.createElement('img');img.src=item.imageUrl||'';img.alt=item.title||'Invitation';img.loading='lazy';img.onerror=()=>{img.style.display='none';};
+       
       const info=document.createElement('div');info.className='inv-info';
       const title=document.createElement('h3');title.textContent=item.title||'Untitled';
       const desc=document.createElement('p');desc.textContent=item.description||item.category||'';
@@ -154,16 +156,16 @@ async function loadInvitations(){
       const actions=document.createElement('div');actions.className='card-actions';
       const edit=document.createElement('button');edit.textContent='Edit';edit.addEventListener('click',()=>editInvitation(item));
       const del=document.createElement('button');del.textContent='Delete';del.className='danger';del.addEventListener('click',()=>removeInvitation(item));
-      actions.append(edit,del);info.append(title,desc,price,status,actions);card.append(img,info);list.append(card);
+      actions.append(edit,del);info.append(title,desc,price,status,actions);card.innerHTML=makeInvitationMarkup(item);card.append(info);list.append(card);
     });
   }catch(error){list.innerHTML='<p>Cards ලබාගැනීමට නොහැකි වුණා. Firestore Rules publish කර තිබේදැයි පරීක්ෂා කරන්න. ('+error.code+')</p>';}
 }
 function editInvitation(item){
-  editingId=item.id;$('title').value=item.title||'';$('category').value=item.category||'wedding';
+  editingId=item.id;$('brideName').value=item.brideName||'';$('groomName').value=item.groomName||'';$('eventDate').value=item.eventDate||'';$('eventTime').value=item.eventTime||'';$('venue').value=item.venue||'';$('theme').value=item.theme||'classic';$('title').value=item.title||'';$('category').value=item.category||'wedding';
   $('price').value=item.price??'';$('imageUrl').value=item.imageUrl||'';$('description').value=item.description||'';
   $('isActive').checked=item.isActive===true;$('formHeading').textContent='Invitation Card එක Edit කරන්න';
   $('saveBtn').textContent='Update Invitation Card';
-  if(item.imageUrl){$('imagePreview').src=item.imageUrl;$('imagePreview').style.display='block';}
+  updateLivePreview();
   openTab('addTab');showFormMessage('');
 }
 async function removeInvitation(item){
@@ -173,8 +175,8 @@ async function removeInvitation(item){
 }
 $('inviteForm').addEventListener('submit',async event=>{
   event.preventDefault();const user=auth.currentUser;if(!user)return;
-  const data={title:$('title').value.trim(),category:$('category').value,description:$('description').value.trim(),imageUrl:$('imageUrl').value.trim(),price:Number($('price').value)||0,isActive:$('isActive').checked,createdBy:user.uid,updatedAt:serverTimestamp()};
-  if(!data.title||!data.imageUrl){showFormMessage('අවශ්‍ය තොරතුරු පුරවන්න.');return;}
+  const data={brideName:$('brideName').value.trim(),groomName:$('groomName').value.trim(),eventDate:$('eventDate').value,eventTime:$('eventTime').value,venue:$('venue').value.trim(),theme:$('theme').value,title:$('title').value.trim(),category:$('category').value,description:$('description').value.trim(),imageUrl:$('imageUrl').value.trim(),price:Number($('price').value)||0,isActive:$('isActive').checked,createdBy:user.uid,updatedAt:serverTimestamp()};
+  if(!data.title||!data.brideName||!data.groomName){showFormMessage('මනාලියගේ නම, මනාලයාගේ නම සහ Invitation නම ඇතුළත් කරන්න.');return;}
   $('saveBtn').disabled=true;$('saveBtn').textContent='Saving...';
   try{
     if(editingId){await updateDoc(doc(db,'invitations',editingId),{...data,createdBy:user.uid});showFormMessage('Invitation Card එක Update කළා.',true);}
