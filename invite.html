@@ -173,32 +173,38 @@ import{initializeApp}from"https://www.gstatic.com/firebasejs/11.6.0/firebase-app
 const app=initializeApp({apiKey:"AIzaSyBodeTb_8XTiVO4ABEI8M5Ea30gFXrfrGc",authDomain:"vowora-6b0d1.firebaseapp.com",projectId:"vowora-6b0d1",storageBucket:"vowora-6b0d1.firebasestorage.app",messagingSenderId:"645328995192",appId:"1:645328995192:web:f8a6a8f3bc07f7f0dffe8d"},"voworaGuestInvitation");const db=getFirestore(app),p=new URLSearchParams(location.search),portal=p.get("p"),guest=p.get("g"),$=id=>document.getElementById(id);let w,g,storyItems=[],storyIndex=0,storyTimer=null,storyPaused=false;
 function esc(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function applyCardPhoto(data){const layer=document.querySelector(".card-photo-bg");if(!layer)return;const image=data.cardBackgroundImage||"";const transparency=Math.max(0,Math.min(90,Number(data.cardTransparency??35)));layer.style.backgroundImage=image?`url("${image}")`:"none";layer.style.setProperty("--unused","");document.querySelector(".card").style.setProperty("--card-photo-opacity",String(1-transparency/100));}
-function applyDesign(){const scene=document.querySelector(".scene");const palettes={rose:["#a93668","#f6c3d7"],ruby:["#9e2038","#f4b3a7"],purple:["#6a3ca0","#d8b8f2"],gold:["#9a6a25","#f6d88f"],blue:["#28649b","#c3e0fa"],green:["#24764e","#b9e8c9"],teal:["#18777a","#b8e9e6"],navy:["#1d3c68","#b8c9e8"]};const c=palettes[w.palette]||palettes.rose;const accent=w.customAccent||c[0],light=w.customLight||c[1];scene.style.setProperty("--accent",accent);scene.style.setProperty("--accent-light",light);scene.dataset.template=w.template||"floral";scene.dataset.effect=w.animation||"petals";scene.dataset.motion=w.cardMotion||"unfold";scene.dataset.couple=String(w.coupleTemplate??0);scene.dataset.background=String(w.backgroundTemplate??0);scene.dataset.coupleMotion=String(w.coupleMotion??0);scene.dataset.time=w.timeOfDay||"evening";const bgIndex=Number(w.backgroundTemplate)||0,hue=(bgIndex*37)%360;const day=scene.dataset.time==="morning",night=scene.dataset.time==="night";const base=day?"hsl("+(hue+95)%360+" 42% 78%)":night?"hsl("+(hue+230)%360+" 42% 18%)":"hsl("+(hue+335)%360+" 42% 45%)";const mid=day?"hsl("+(hue+125)%360+" 38% 56%)":night?"hsl("+(hue+245)%360+" 40% 10%)":"hsl("+(hue+350)%360+" 42% 25%)";scene.style.background="radial-gradient(ellipse at 50% 24%,"+light+" 0%,"+base+" 44%,"+mid+" 100%)";scene.style.setProperty("--scene-glow",light);const art=document.getElementById("storyArt");art.dataset.couple=String(w.coupleTemplate??0);art.dataset.motion=String(w.coupleMotion??0);art.dataset.time=scene.dataset.time;applyCharacterPreset();document.querySelectorAll(".petal").forEach(x=>x.remove());const effect=w.animation||"petals";const chars={petals:"🌸",hearts:"♥",particles:"✦",butterfly:"🦋"};if(effect!=="none"&&effect!=="glow"){for(let i=0;i<18;i++){const el=document.createElement("span");el.className="effect-item";el.textContent=chars[effect]||"✦";el.style.setProperty("--x",(Math.random()*100)+"%");el.style.setProperty("--size",(12+Math.random()*17)+"px");el.style.setProperty("--duration",(9+Math.random()*10)+"s");el.style.setProperty("--delay",(-Math.random()*18)+"s");scene.appendChild(el)}}}
+function applyDesign(){
+ const scene=document.querySelector(".scene");
+ const palettes={rose:["#a93668","#f6c3d7"],ruby:["#9e2038","#f4b3a7"],purple:["#6a3ca0","#d8b8f2"],gold:["#9a6a25","#f6d88f"],blue:["#28649b","#c3e0fa"],green:["#24764e","#b9e8c9"],teal:["#18777a","#b8e9e6"],navy:["#1d3c68","#b8c9e8"]};
+ const c=palettes[w.palette]||palettes.rose,accent=w.customAccent||c[0],light=w.customLight||c[1];
+ scene.style.setProperty("--accent",accent);scene.style.setProperty("--accent-light",light);
+ scene.dataset.template=w.template||"floral";scene.dataset.effect=w.animation||"petals";scene.dataset.motion=w.cardMotion||"unfold";
+ scene.dataset.time=w.timeOfDay||"evening";
+ const night=scene.dataset.time==="night",morning=scene.dataset.time==="morning";
+ const base=night?"#292238":morning?"#f3d9c9":"#76505e";
+ const mid=night?"#111827":morning?"#b9a18a":"#392b35";
+ scene.style.background="radial-gradient(ellipse at 50% 24%,"+light+" 0%,"+base+" 48%,"+mid+" 100%)";
+ scene.style.setProperty("--scene-glow",light);
+ applyCharacterPreset();
+ document.querySelectorAll(".petal").forEach(x=>x.remove());
+ const effect=w.animation||"petals",chars={petals:"🌸",hearts:"♥",particles:"✦",butterfly:"🦋"};
+ if(effect!=="none"&&effect!=="glow"){for(let i=0;i<18;i++){const el=document.createElement("span");el.className="effect-item";el.textContent=chars[effect]||"✦";el.style.setProperty("--x",(Math.random()*100)+"%");el.style.setProperty("--size",(12+Math.random()*17)+"px");el.style.setProperty("--duration",(9+Math.random()*10)+"s");el.style.setProperty("--delay",(-Math.random()*18)+"s");scene.appendChild(el)}}
+}
 function applyCharacterPreset(){
-const svg=document.querySelector("#storyArt svg");if(!svg||!w)return;
-const ci=Math.max(0,Math.min(49,Number(w.coupleTemplate)||0)),bi=Math.max(0,Math.min(49,Number(w.backgroundTemplate)||0)),mi=Math.max(0,Math.min(49,Number(w.coupleMotion)||0));
-svg.dataset.couple=ci;svg.dataset.background=bi;svg.dataset.motion=mi;svg.dataset.time=w.timeOfDay||"evening";
-const palettes=[["#fff8e9","#9eb58d","#d7b59b","#b58a54","#e9a9b9"],["#fff0e4","#7caa8b","#d7b28c","#9a6a25","#f0b1a7"],["#e8edff","#657a9e","#b8a7c7","#7182b5","#d9c2f2"],["#fbe4e8","#8e9c83","#c79c91","#a04d67","#f4c3d1"],["#fff3cf","#93a96e","#d5b36b","#bd9257","#f4d58d"],["#d8e8f4","#537f91","#a6c3cf","#547b93","#c2e4e9"]];
-const p=palettes[bi%palettes.length],hue=(bi*29)%360,night=svg.dataset.time==="night",morning=svg.dataset.time==="morning";
-const sky=night?"hsl("+(hue+225)%360+" 36% 18%)":morning?"hsl("+(hue+45)%360+" 65% 88%)":"hsl("+(hue+12)%360+" 55% 82%)";
-const ground=night?"hsl("+(hue+125)%360+" 28% 24%)":morning?"hsl("+(hue+105)%360+" 32% 62%)":"hsl("+(hue+95)%360+" 30% 48%)";
-const walk=night?"hsl("+(hue+20)%360+" 25% 38%)":"hsl("+(hue+15)%360+" 42% 72%)";
-const stops=svg.querySelectorAll("#sky stop");if(stops[0])stops[0].setAttribute("stop-color",sky);if(stops[1])stops[1].setAttribute("stop-color",night?"#34304b":p[0]);
-const rect=svg.querySelector("rect");if(rect)rect.setAttribute("fill","url(#sky)");
-const paths=svg.querySelectorAll(":scope > path");if(paths[0])paths[0].setAttribute("fill",ground);if(paths[1])paths[1].setAttribute("fill",walk);
-svg.querySelectorAll("path[stroke='#b58a54']").forEach(x=>x.setAttribute("stroke",p[3]));
-svg.querySelectorAll("g[fill='#e9a9b9'] circle").forEach((x,i)=>x.setAttribute("fill",["#e9a9b9","#f1d18b","#c4a4d8","#f4f0e7","#e58e9f"][bi%5]));
-const outfit=["#7b284f","#244c73","#28664f","#9a6325","#633c78","#a83245","#4b5967","#b36b70","#315d61","#8b4b2f"][ci%10],bridal=["#fff8ec","#e8c4a8","#d9b6d8","#f0c2cc","#b9cfae","#e8d28d","#c5d7e8","#f1aeb7","#d8c0a2","#d8d8e8"][ci%10];
-const gp=svg.querySelector(".groom-outfit"),bp=svg.querySelector(".bride-outfit");
-if(gp)gp.setAttribute("fill",outfit);if(bp)bp.setAttribute("fill",bridal);
-const skin=["#c98d6d","#b97858","#d49a7b","#a96e54","#dba17f"][ci%5];svg.querySelectorAll(".groom-character path[fill='#c98d6d'],.bride-character path[fill='#dba17f']").forEach(x=>x.setAttribute("fill",skin));
-const motionNames=["walk","sway","bow","dance","turn","glide","bounce","step","celebrate","pose"];
-const motion=motionNames[mi%motionNames.length],duration=(1.1+(mi%7)*.19).toFixed(2)+"s",dx=5+(mi%9)*2,dy=5+(mi%6)*2,rot=2+(mi%8)*1.5;
-const style=document.getElementById("voworaMotionStyles")||document.createElement("style");style.id="voworaMotionStyles";
-style.textContent="@keyframes voworaCoupleMotion{0%,100%{transform:translate(0,0) rotate(0)}25%{transform:translate("+dx+"px,-"+dy+"px) rotate("+rot+"deg)}50%{transform:translate(-"+dx+"px,-"+(dy/2)+"px) rotate(-"+rot+"deg)}75%{transform:translate(0,0) rotate(0)}}#storyArt svg .groom-character,#storyArt svg .bride-character{transform-box:fill-box;transform-origin:center bottom;transform-style:preserve-3d;will-change:transform}";
-document.head.appendChild(style);
-svg.querySelectorAll(".groom-character,.bride-character").forEach((el,n)=>{el.style.animation="voworaCoupleMotion "+duration+" ease-in-out infinite";el.style.animationDelay=(n*.12)+"s"});
-svg.dataset.motionName=motion;
+ const svg=document.querySelector("#storyArt svg");if(!svg)return;
+ const night=(w?.timeOfDay||"evening")==="night",morning=(w?.timeOfDay||"evening")==="morning";
+ const sky=night?"#25243c":morning?"#f7e6d7":"#f8e7dc";
+ const ground=night?"#425348":morning?"#91a77d":"#71866c";
+ const walk=night?"#786b78":"#c7a887";
+ const stops=svg.querySelectorAll("#sky stop");if(stops[0])stops[0].setAttribute("stop-color",sky);if(stops[1])stops[1].setAttribute("stop-color",night?"#34304b":"#f9e8dc");
+ const rect=svg.querySelector("rect");if(rect)rect.setAttribute("fill","url(#sky)");
+ const paths=svg.querySelectorAll(":scope > path");if(paths[0])paths[0].setAttribute("fill",ground);if(paths[1])paths[1].setAttribute("fill",walk);
+ const gp=svg.querySelector(".groom-outfit"),bp=svg.querySelector(".bride-outfit");
+ if(gp)gp.setAttribute("fill","#7b284f");if(bp)bp.setAttribute("fill","#fff0e2");
+ const style=document.getElementById("voworaMotionStyles")||document.createElement("style");style.id="voworaMotionStyles";
+ style.textContent="@keyframes voworaCoupleMotion{0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-7px) rotate(1deg)}50%{transform:translateY(0) rotate(0)}75%{transform:translateY(-4px) rotate(-1deg)}}#storyArt svg .groom-character,#storyArt svg .bride-character{transform-box:fill-box;transform-origin:center bottom;will-change:transform}";
+ document.head.appendChild(style);
+ svg.querySelectorAll(".groom-character,.bride-character").forEach((el,n)=>{el.style.animation="voworaCoupleMotion 2.8s ease-in-out infinite";el.style.animationDelay=(n*.12)+"s"});
 }
 const storyCatalog={
 intro:{title:"The Couple",caption:"Two hearts meet, and a beautiful forever begins.",kind:"couple"},
