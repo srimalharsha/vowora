@@ -129,6 +129,7 @@ $("logout").onclick=()=>signOut(auth);
 function adminFeatureOn(key){const fold=document.querySelector('.admin-fold[data-feature="'+key+'"]');return !fold||!!fold.querySelector(".admin-fold-toggle")?.checked}
 function makeAdminFold(node,title,key){
   if(!node||node.dataset.foldReady)return;
+  if(["design","design-motion","design-animation","design-palette","studio-0","studio-1"].includes(key))return;
   const details=document.createElement("details");
   details.className="admin-fold";
   details.open=false;
