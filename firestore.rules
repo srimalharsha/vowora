@@ -34,7 +34,7 @@ service cloud.firestore {
           return portalExists()
             && get(/databases/$(database)/documents/couplePortals/$(portalToken)).data.expiresAt > request.time;
         }
-        allow get, list: if portalActive();
+        allow get, list: if isVoworaAdmin() || portalActive();
         allow create: if portalActive()
           && request.resource.data.guestName is string
           && request.resource.data.guestName.size() > 0
