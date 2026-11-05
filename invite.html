@@ -82,7 +82,7 @@ const paths=svg.querySelectorAll(":scope > path");if(paths[0])paths[0].setAttrib
 svg.querySelectorAll("path[stroke='#b58a54']").forEach(x=>x.setAttribute("stroke",p[3]));
 svg.querySelectorAll("g[fill='#e9a9b9'] circle").forEach((x,i)=>x.setAttribute("fill",["#e9a9b9","#f1d18b","#c4a4d8","#f4f0e7","#e58e9f"][bi%5]));
 const outfit=["#7b284f","#244c73","#28664f","#9a6325","#633c78","#a83245","#4b5967","#b36b70","#315d61","#8b4b2f"][ci%10],bridal=["#fff8ec","#e8c4a8","#d9b6d8","#f0c2cc","#b9cfae","#e8d28d","#c5d7e8","#f1aeb7","#d8c0a2","#d8d8e8"][ci%10];
-const gp=svg.querySelector(".groom-character > path:nth-of-type(5)"),bp=svg.querySelector(".bride-character > path:nth-of-type(5)");
+const gp=svg.querySelector(".groom-outfit"),bp=svg.querySelector(".bride-outfit");
 if(gp)gp.setAttribute("fill",outfit);if(bp)bp.setAttribute("fill",bridal);
 const skin=["#c98d6d","#b97858","#d49a7b","#a96e54","#dba17f"][ci%5];svg.querySelectorAll(".groom-character path[fill='#c98d6d'],.bride-character path[fill='#dba17f']").forEach(x=>x.setAttribute("fill",skin));
 const motionNames=["walk","sway","bow","dance","turn","glide","bounce","step","celebrate","pose"];
@@ -105,33 +105,102 @@ closing:{title:"Be There With Us",caption:"Your presence will make our day compl
 };
 function cartoon(kind){
 const bride=esc(w?.brideName||"Bride"),groom=esc(w?.groomName||"Groom");
-return `<svg class="kind-${kind}" viewBox="0 0 480 340" role="img" aria-label="2D illustrated bride and groom in a flower garden">
-<defs><linearGradient id="sky" x2="0" y2="1"><stop stop-color="#f8dfd8"/><stop offset="1" stop-color="#fff8e9"/></linearGradient><linearGradient id="ivory" x2="1" y2="1"><stop stop-color="#fffdf7"/><stop offset="1" stop-color="#d9bdac"/></linearGradient><linearGradient id="gold" x2="1" y2="1"><stop stop-color="#fff0c7"/><stop offset="1" stop-color="#bd9257"/></linearGradient></defs>
-<rect width="480" height="340" rx="25" fill="url(#sky)"/><circle cx="80" cy="65" r="35" fill="#fff" opacity=".5"/><circle cx="395" cy="55" r="48" fill="#fff" opacity=".45"/>
-<path d="M0 232Q120 200 240 232T480 225V340H0Z" fill="#9eb58d"/><path d="M145 340Q200 250 240 225Q280 250 350 340Z" fill="#d7b59b"/>
-<path d="M58 260V135Q240 -55 422 135V260" fill="none" stroke="#b58a54" stroke-width="12"/><path d="M70 255V140Q240 -25 410 140V255" fill="none" stroke="#fff5e7" stroke-width="7"/>
-<g fill="#e9a9b9"><circle cx="76" cy="150" r="12"/><circle cx="105" cy="111" r="11"/><circle cx="145" cy="79" r="12"/><circle cx="190" cy="52" r="11"/><circle cx="240" cy="42" r="13"/><circle cx="290" cy="55" r="11"/><circle cx="337" cy="83" r="12"/><circle cx="377" cy="119" r="11"/><circle cx="405" cy="160" r="12"/></g>
-<g fill="#fff0d1"><circle cx="118" cy="95" r="5"/><circle cx="180" cy="58" r="5"/><circle cx="270" cy="48" r="5"/><circle cx="350" cy="91" r="5"/></g>
-<g class="dove" fill="#fff" stroke="#d8c6b8" stroke-width="1.5"><path d="M150 52q-20-18-31-2 16 0 20 17-17-8-27 5 24 3 39-8 12 6 22-3-13 0-23-9z"/><path d="M330 45q20-18 31-2-16 0-20 17 17-8 27 5-24 3-39-8-12 6-22-3 13 0 23-9z"/></g>
-<g fill="#f4d3dd"><circle cx="24" cy="278" r="12"/><circle cx="47" cy="286" r="10"/><circle cx="69" cy="273" r="11"/><circle cx="410" cy="278" r="12"/><circle cx="437" cy="287" r="10"/><circle cx="459" cy="271" r="11"/></g>
-<ellipse cx="240" cy="300" rx="110" ry="14" fill="#604c43" opacity=".17"/>
-<g class="groom-character" stroke="#60494a" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
-<path d="M203 268l-4 48h20l8-48M247 268l6 48h20l-8-48" fill="#594452"/><path d="M196 311h28v9h-31zM251 311h28v9h-31z" fill="#332b35"/>
-<path d="M195 158q-14 7-17 28l-7 79q36 15 82 0l-8-83q-5-20-23-24z" fill="url(#gold)"/><path d="M224 158l14 17 14-17-9 91h-12z" fill="#7b284f"/><path d="M224 158l14 17-10 12-12-19M252 158l-14 17 10 12 12-19" fill="#fff9ed"/>
-<path d="M201 184l-15 52M260 184l10 50" stroke="#b58a54" stroke-width="3"/><g fill="#b58a54"><circle cx="238" cy="199" r="2.5"/><circle cx="238" cy="216" r="2.5"/><circle cx="238" cy="233" r="2.5"/></g>
-<path d="M204 130q0-31 31-31 31 1 31 34l-5 28q-26 18-52 0z" fill="#c98d6d"/><path d="M203 130q-5-41 31-45 35 2 36 43-17-19-35-18-17 0-32 20z" fill="#33252b"/><path d="M216 138q5-4 10 0M240 138q5-4 10 0" fill="none"/><circle cx="222" cy="142" r="2.5" fill="#30242a" stroke="none"/><circle cx="247" cy="142" r="2.5" fill="#30242a" stroke="none"/><path d="M227 154q10 7 19-1" fill="none" stroke="#914e4d"/><path d="M199 180q-17 9-16 31l-2 30" fill="none" stroke="#c98d6d" stroke-width="11"/><path class="arm" d="M264 180q15 9 14 29l-18 27" fill="none" stroke="#c98d6d" stroke-width="11"/>
+return \`<svg class="kind-\${kind} vowora-cinematic-art" viewBox="0 0 960 620" role="img" aria-label="Elegant illustrated South Asian bride and groom in a palace garden">
+<defs>
+ <linearGradient id="vSky" x2="0" y2="1"><stop stop-color="#f8e7dc"/><stop offset=".56" stop-color="#f9e8dc"/><stop offset="1" stop-color="#f5d9c8"/></linearGradient>
+ <linearGradient id="vGround" x2="0" y2="1"><stop stop-color="#8b9c79"/><stop offset="1" stop-color="#405b4d"/></linearGradient>
+ <linearGradient id="vGold" x2="1" y2="1"><stop stop-color="#fff0bd"/><stop offset=".45" stop-color="#c69a55"/><stop offset="1" stop-color="#8b6339"/></linearGradient>
+ <linearGradient id="vSilk" x2="1" y2="1"><stop stop-color="#fff9ed"/><stop offset=".55" stop-color="#e7d1bd"/><stop offset="1" stop-color="#c69f87"/></linearGradient>
+ <linearGradient id="vSaree" x2="1" y2="1"><stop stop-color="#f8d9df"/><stop offset=".48" stop-color="#b84e69"/><stop offset="1" stop-color="#672b49"/></linearGradient>
+ <linearGradient id="vSherwani" x2="1" y2="1"><stop stop-color="#f3dfb8"/><stop offset=".5" stop-color="#bd9255"/><stop offset="1" stop-color="#75502f"/></linearGradient>
+ <linearGradient id="vHair" x2="1" y2="1"><stop stop-color="#4d302c"/><stop offset="1" stop-color="#211b20"/></linearGradient>
+ <radialGradient id="vGlow"><stop stop-color="#fff9e8" stop-opacity=".95"/><stop offset="1" stop-color="#fff9e8" stop-opacity="0"/></radialGradient>
+ <filter id="vShadow" x="-30%" y="-30%" width="160%" height="170%"><feGaussianBlur stdDeviation="9"/></filter>
+ <filter id="vSoft"><feGaussianBlur stdDeviation="2.5"/></filter>
+</defs>
+<rect width="960" height="620" fill="url(#vSky)"/>
+<circle cx="480" cy="168" r="190" fill="url(#vGlow)"/>
+<g opacity=".34" fill="#fff"><ellipse cx="170" cy="110" rx="115" ry="28"/><ellipse cx="780" cy="90" rx="140" ry="32"/></g>
+<!-- distant palace -->
+<g fill="#f7eee2" stroke="#d8bd9a" stroke-width="3" opacity=".9">
+ <path d="M90 330V228h54v-42h42v42h42v102zM115 228v-30h30v30M178 228v-30h30v30"/>
+ <path d="M700 330V220h52v-48h46v48h58v110zM720 220v-36h32v36M798 220v-36h32v36"/>
+ <path d="M390 270v-65q90-95 180 0v65z" fill="#f9f0e5"/>
 </g>
-<g class="bride-character" stroke="#76545a" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
-<path d="M292 267l-3 49h19l8-49M326 267l6 49h19l-8-49" fill="#ead8d0"/><path d="M285 311h28v9h-31zM331 311h28v9h-31z" fill="#9e7b69"/>
-<path d="M284 157q-20 5-23 27l-7 79q42 24 92 0l-9-80q-6-21-27-26z" fill="url(#ivory)"/><path d="M285 161q16 29 33 2l25 98q-35 18-72 0z" fill="#fff9ef" opacity=".8"/><path d="M280 174q-10 38-10 81M335 174q14 42 10 81" fill="none" stroke="#c9a276" stroke-width="3"/><g fill="#c9a276"><circle cx="289" cy="190" r="2"/><circle cx="307" cy="207" r="2"/><circle cx="327" cy="190" r="2"/><circle cx="286" cy="236" r="2"/><circle cx="330" cy="241" r="2"/></g>
-<path d="M283 129q0-35 31-36 31 2 32 37l-5 27q-27 19-53-1z" fill="#dba17f"/><path d="M280 130q-4-42 34-49 38 4 37 48-13-23-35-24-18 0-36 25z" fill="#35252b"/><path d="M279 118q-7 35 3 50M346 115q8 35-4 52" fill="none" stroke="#35252b" stroke-width="8"/><g fill="#fff0d1" stroke="#c8a66c"><circle cx="348" cy="140" r="4"/><circle cx="351" cy="151" r="4"/><circle cx="346" cy="162" r="4"/></g><path d="M295 138q5-4 10 0M320 138q5-4 10 0" fill="none"/><circle cx="301" cy="142" r="2.5" fill="#30242a" stroke="none"/><circle cx="327" cy="142" r="2.5" fill="#30242a" stroke="none"/><path d="M307 154q8 7 16 0" fill="none" stroke="#a44f5d"/><path d="M288 167q-18 10-16 30l-13 34" fill="none" stroke="#dba17f" stroke-width="10"/><path class="arm" d="M334 167q17 10 18 28l-18 35" fill="none" stroke="#dba17f" stroke-width="10"/><path d="M285 104q-8-13-1-22M301 94q-3-15 8-22M328 94q9-13 4-21" fill="none" stroke="#fff5df" stroke-width="5"/>
+<g fill="#c69a65" opacity=".6"><path d="M128 255h18v75h-18zM184 255h18v75h-18zM736 250h18v80h-18zM804 250h18v80h-18z"/></g>
+<!-- garden -->
+<path d="M0 390Q220 330 480 390T960 380V620H0Z" fill="url(#vGround)"/>
+<path d="M300 620Q400 425 480 386Q560 425 660 620Z" fill="#d7b99b" opacity=".78"/>
+<path d="M380 620Q450 450 480 414Q510 450 580 620Z" fill="#f1dfc8" opacity=".55"/>
+<!-- ornate floral arch -->
+<path d="M190 442V246Q480 -80 770 246V442" fill="none" stroke="#a87d48" stroke-width="18" opacity=".95"/>
+<path d="M211 440V251Q480 -40 749 251V440" fill="none" stroke="#fff0d4" stroke-width="8"/>
+<path d="M230 438V256Q480 5 730 256V438" fill="none" stroke="#d2aa70" stroke-width="3" stroke-dasharray="3 11"/>
+<g fill="none" stroke="#52765b" stroke-width="7" stroke-linecap="round">
+ <path d="M204 400q-55-80-8-151q-2 61 28 83M224 330q-40-66-5-112q0 45 28 62M755 400q55-80 8-151q2 61-28 83M735 330q40-66 5-112q0 45-28 62"/>
 </g>
-<path class="joined-hands" d="M268 235q8-10 15-2l7 7q-7 10-15 7z" fill="#d49a7b" stroke="#76545a" stroke-width="2"/>
-<g class="proposal-ring"><circle cx="286" cy="235" r="7" fill="none" stroke="#e4bf66" stroke-width="3"/><path d="M282 230l4-7 4 7" fill="none" stroke="#fff0b5" stroke-width="2"/></g>
-<g class="floating-petals" fill="#f4b8c8"><path d="M120 205q15-10 12 8-8 8-12-8z"/><path d="M370 185q15-10 12 8-8 8-12-8z"/><path d="M170 275q15-10 12 8-8 8-12-8z"/></g>
-<text class="scene-name" x="240" y="334" text-anchor="middle">${bride.length>15?bride.slice(0,14)+"…":bride} &amp; ${groom.length>15?groom.slice(0,14)+"…":groom}</text></svg>`;
+<g fill="#f4d8d5" stroke="#fff2e7" stroke-width="3">
+ <circle cx="205" cy="244" r="16"/><circle cx="237" cy="205" r="14"/><circle cx="277" cy="167" r="17"/><circle cx="325" cy="127" r="14"/><circle cx="379" cy="94" r="16"/><circle cx="436" cy="77" r="14"/><circle cx="490" cy="73" r="17"/><circle cx="545" cy="83" r="15"/><circle cx="600" cy="112" r="17"/><circle cx="650" cy="151" r="15"/><circle cx="693" cy="194" r="17"/><circle cx="728" cy="244" r="15"/>
+</g>
+<g fill="#e8bd83"><circle cx="205" cy="244" r="5"/><circle cx="277" cy="167" r="5"/><circle cx="379" cy="94" r="5"/><circle cx="490" cy="73" r="5"/><circle cx="600" cy="112" r="5"/><circle cx="693" cy="194" r="5"/></g>
+<g fill="#fff8ed" opacity=".95"><circle cx="237" cy="205" r="5"/><circle cx="325" cy="127" r="5"/><circle cx="436" cy="77" r="5"/><circle cx="545" cy="83" r="5"/><circle cx="650" cy="151" r="5"/></g>
+<!-- leaves and flower beds -->
+<g fill="#78916d"><ellipse cx="90" cy="470" rx="38" ry="12" transform="rotate(-25 90 470)"/><ellipse cx="145" cy="495" rx="42" ry="13" transform="rotate(25 145 495)"/><ellipse cx="840" cy="480" rx="40" ry="13" transform="rotate(25 840 480)"/><ellipse cx="900" cy="455" rx="35" ry="12" transform="rotate(-25 900 455)"/></g>
+<g fill="#f2c5cf"><circle cx="75" cy="453" r="12"/><circle cx="110" cy="485" r="10"/><circle cx="160" cy="458" r="13"/><circle cx="820" cy="458" r="13"/><circle cx="870" cy="485" r="11"/><circle cx="915" cy="448" r="12"/></g>
+<ellipse cx="480" cy="535" rx="185" ry="24" fill="#172b25" opacity=".28" filter="url(#vShadow)"/>
+<!-- Groom: detailed sherwani -->
+<g class="groom-character" stroke-linejoin="round" stroke-linecap="round">
+ <path d="M405 425l-12 104h42l19-94 17 94h42l-14-104z" fill="#44313b"/>
+ <path d="M392 515h48l-2 18h-53q-7-7 7-18M469 515h47l13 18h-54z" fill="#2e2830"/>
+ <path class="groom-outfit" d="M405 278q-25 9-32 39l-18 119q69 38 147 0l-19-119q-7-30-33-39l-22 20z" fill="url(#vSherwani)" stroke="#775331" stroke-width="4"/>
+ <path d="M428 288l25 25 23-25-15 143h-20z" fill="#7b284f" stroke="#e0bd80" stroke-width="3"/>
+ <path d="M405 281l24 5 24 27-25 21-34-31zM477 281l-24 5-24 27 25 21 34-31z" fill="#f6e8cf" stroke="#b88a4e" stroke-width="3"/>
+ <path d="M390 333l-14 90M493 333l14 90" stroke="#f0d8a8" stroke-width="4"/>
+ <g fill="#fff0bd" stroke="#a87d48" stroke-width="1.5"><circle cx="452" cy="350" r="4"/><circle cx="452" cy="373" r="4"/><circle cx="452" cy="396" r="4"/><circle cx="452" cy="419" r="4"/></g>
+ <path d="M410 276q-5-46 41-54 47 7 45 55l-8 39q-37 25-72 0z" fill="#a96f55" stroke="#68453e" stroke-width="3"/>
+ <path d="M404 273q-8-57 45-67 54 6 52 68-22-28-49-27-25 1-48 26z" fill="url(#vHair)"/>
+ <path d="M411 235q25-35 72-14" fill="none" stroke="#2b2025" stroke-width="9"/>
+ <path d="M420 285q10-8 19 0M455 285q10-8 19 0" fill="none" stroke="#3d2828" stroke-width="3"/>
+ <ellipse cx="430" cy="290" rx="3.5" ry="4" fill="#282027"/><ellipse cx="464" cy="290" rx="3.5" ry="4" fill="#282027"/>
+ <path d="M440 309q11 7 22-1" fill="none" stroke="#7f4542" stroke-width="3"/>
+ <path d="M402 300q-22 15-22 45l-12 68" fill="none" stroke="#a96f55" stroke-width="17"/>
+ <path class="arm" d="M489 300q24 14 25 44l-22 55" fill="none" stroke="#a96f55" stroke-width="17"/>
+ <path d="M398 266q-8-22 7-34l18 4-8 23z" fill="#f3dfb8" stroke="#b88a4e" stroke-width="3"/>
+ <path d="M402 246l-8-17 20 3" fill="none" stroke="#b88a4e" stroke-width="4"/>
+</g>
+<!-- Bride: ornate South Asian bridal saree -->
+<g class="bride-character" stroke-linejoin="round" stroke-linecap="round">
+ <path d="M526 427l-5 103h39l13-99 16 99h39l-13-105z" fill="#f0dfcf" stroke="#9c786b" stroke-width="3"/>
+ <path d="M520 515h44l-2 18h-49q-7-8 7-18M575 515h47l12 18h-55z" fill="#8c5d57"/>
+ <path class="bride-outfit" d="M520 280q-27 10-34 39l-19 117q79 44 164 0l-20-117q-7-29-34-39l-29 21z" fill="url(#vSaree)" stroke="#7d344e" stroke-width="4"/>
+ <path d="M520 285q-17 48 7 126l-35 27q-16-49-2-119z" fill="#f0d4ae" stroke="#b58a54" stroke-width="4"/>
+ <path d="M569 282q-20 56-9 150l61 6q-27-89-19-137z" fill="#d69b72" opacity=".9" stroke="#a86f55" stroke-width="3"/>
+ <path d="M494 429q60 25 137 0" fill="none" stroke="#f4dcae" stroke-width="7"/>
+ <path d="M507 325q42 29 83 0M501 350q48 30 96 0M497 379q52 27 105 0" fill="none" stroke="#edc78b" stroke-width="3" opacity=".95"/>
+ <g fill="#f6dba8" stroke="#8d5b48" stroke-width="1"><circle cx="526" cy="339" r="4"/><circle cx="546" cy="351" r="4"/><circle cx="568" cy="339" r="4"/><circle cx="514" cy="385" r="4"/><circle cx="542" cy="394" r="4"/><circle cx="574" cy="384" r="4"/><circle cx="600" cy="398" r="4"/></g>
+ <path d="M522 268q-4-49 39-54 47 6 47 55l-8 39q-37 25-72 0z" fill="#c98a6c" stroke="#855b4b" stroke-width="3"/>
+ <path d="M516 269q-10-58 43-72 55 9 55 73-19-28-49-29-28 1-49 28z" fill="url(#vHair)"/>
+ <path d="M520 263q-4 46 11 64M610 260q6 44-10 68" fill="none" stroke="#35232b" stroke-width="12"/>
+ <path d="M535 285q10-8 19 0M571 285q10-8 19 0" fill="none" stroke="#3b292c" stroke-width="3"/>
+ <ellipse cx="546" cy="290" rx="3.5" ry="4" fill="#2b2028"/><ellipse cx="583" cy="290" rx="3.5" ry="4" fill="#2b2028"/>
+ <path d="M556 309q12 8 23-1" fill="none" stroke="#984e57" stroke-width="3"/>
+ <path d="M532 260q26 17 55 0" fill="none" stroke="#d7ae67" stroke-width="5"/>
+ <path d="M540 255q18-10 38 0" fill="none" stroke="#f8e4b8" stroke-width="5"/>
+ <g fill="#e5bd72" stroke="#956d43" stroke-width="2"><circle cx="524" cy="296" r="7"/><circle cx="613" cy="296" r="7"/><path d="M568 251l-7 12 7 12 7-12z"/></g>
+ <path d="M532 302q-16 16-16 36l-12 48" fill="none" stroke="#c98a6c" stroke-width="15"/>
+ <path class="arm" d="M603 302q20 15 20 38l-20 43" fill="none" stroke="#c98a6c" stroke-width="15"/>
+ <path d="M524 237q-13-18-3-33M543 226q-4-22 10-31M585 226q14-17 8-33" fill="none" stroke="#fff0dc" stroke-width="7"/>
+ <path d="M517 326q-12 12-16 30" fill="none" stroke="#e8c58a" stroke-width="4"/>
+</g>
+<!-- joined hands and ring sparkle -->
+<path class="joined-hands" d="M495 402q13-17 26-6l12 12q-13 15-27 8z" fill="#bd8066" stroke="#76504b" stroke-width="3"/>
+<g class="proposal-ring"><circle cx="519" cy="402" r="9" fill="none" stroke="#f9e1a1" stroke-width="4"/><path d="M513 395l6-10 6 10" fill="none" stroke="#fff6d9" stroke-width="3"/><path d="M519 379v-13m-13 20-10-8m36 8 10-8" stroke="#fff4d4" stroke-width="3"/></g>
+<!-- floating petals / warm cinematic sparkles -->
+<g fill="#fff0df" opacity=".8"><circle cx="280" cy="340" r="4"/><circle cx="690" cy="280" r="5"/><circle cx="340" cy="440" r="3"/><circle cx="660" cy="450" r="4"/><circle cx="470" cy="180" r="3"/></g>
+<g class="floating-petals" fill="#e9a9b9" opacity=".9"><path d="M320 290q-20-24 3-35 15 20-3 35z"/><path d="M680 340q-20-24 3-35 15 20-3 35z"/><path d="M350 175q-20-24 3-35 15 20-3 35z"/></g>
+<g fill="#fff8eb" opacity=".65" font-family="Georgia,serif" text-anchor="middle"><text x="480" y="570" font-size="15" letter-spacing="5">A CELEBRATION OF LOVE</text></g>
+</svg>\`;
 }
-let storyItems=[],storyIndex=0,storyTimer=null,storyPaused=false;
 function renderStory(){if(!storyItems.length)return;const item=storyCatalog[storyItems[storyIndex]]||storyCatalog.intro;$("storyArt").innerHTML=cartoon(item.kind);applyCharacterPreset();$("storyTitle").textContent=item.title;$("storyCaption").textContent=item.caption;$("storyProgress").innerHTML=storyItems.map((_,i)=>"<i class='"+(i===storyIndex?"active":"")+"'></i>").join("");$("storyPause").textContent=storyPaused?"▶ Play":"Ⅱ Pause"}
 function stopStory(){if(storyTimer){clearInterval(storyTimer);storyTimer=null}}
 function startStory(){stopStory();if(storyItems.length<1||storyPaused)return;storyTimer=setInterval(()=>{if(storyIndex<storyItems.length-1){storyIndex++;renderStory()}else{stopStory();$("storyPause").textContent="↻ Replay";storyPaused=true}},Math.max(3000,Math.min(10000,Number(w.storySpeed)||5)*1000))}
