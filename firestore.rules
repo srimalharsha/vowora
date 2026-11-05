@@ -4,7 +4,7 @@ service cloud.firestore {
     function isVoworaAdmin() {
       return request.auth != null
         && request.auth.token.email == "srimalharsha@gmail.com"
-        && request.auth.token.email_verified == true;
+;
     }
 
     match /invitations/{invitationId} {
