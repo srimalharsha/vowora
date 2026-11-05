@@ -190,7 +190,7 @@ a{text-decoration:none;color:inherit}
 </article>
 
 </div>
-<p class="note">මෙහි පෙන්වා ඇති නිර්මාණ ආදර්ශ පමණි. ඔබගේ සැබෑ නිර්මාණ පසුව Admin System එකක් හරහා එකතු කළ හැක.</p>
+<p class="note">අලුත්ම Invitation නිර්මාණ මෙහි ස්වයංක්‍රීයව එක්වේ. තවත් විස්තර සඳහා WhatsApp හරහා විමසන්න.</p>
 </div>
 </section>
 
@@ -249,5 +249,61 @@ document.addEventListener('keydown',e=>{
 if(e.key==='Escape')closePreview();
 });
 </script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+const voworaConfig = {
+  apiKey: "AIzaSyBodeTb_8XTiVO4ABEI8M5Ea30gFXrfrGc",
+  authDomain: "vowora-6b0d1.firebaseapp.com",
+  projectId: "vowora-6b0d1",
+  storageBucket: "vowora-6b0d1.firebasestorage.app",
+  messagingSenderId: "645328995192",
+  appId: "1:645328995192:web:f8a6a8f3bc07f7f0dffe8d"
+};
+const voworaApp = initializeApp(voworaConfig, "voworaPublicGallery");
+const voworaDb = getFirestore(voworaApp);
+const gallery = document.getElementById("gallery");
+try {
+  const activeQuery = query(collection(voworaDb, "invitations"), where("isActive", "==", true));
+  const snapshot = await getDocs(activeQuery);
+  snapshot.forEach((entry) => {
+    const item = entry.data();
+    const card = document.createElement("article");
+    card.className = "card";
+    card.dataset.category = item.category || "other";
+    const art = document.createElement("div");
+    art.className = "art";
+    art.style.background = "#f5edf0";
+    art.addEventListener("click", () => window.preview(art));
+    const image = document.createElement("img");
+    image.src = item.imageUrl || "";
+    image.alt = item.title || "VOWORA Invitation";
+    image.loading = "lazy";
+    image.style.cssText = "width:100%;height:100%;object-fit:contain;background:#fff;";
+    art.appendChild(image);
+    const title = document.createElement("h3");
+    title.textContent = item.title || "Invitation Design";
+    const desc = document.createElement("p");
+    desc.textContent = (item.description || item.category || "Invitation") + (Number(item.price) > 0 ? " · රු. " + Number(item.price).toLocaleString("en-US") : "");
+    const actions = document.createElement("div");
+    actions.className = "card-actions";
+    const previewBtn = document.createElement("button");
+    previewBtn.className = "smallbtn";
+    previewBtn.textContent = "Preview";
+    previewBtn.addEventListener("click", () => window.preview(art));
+    const enquireBtn = document.createElement("button");
+    enquireBtn.className = "smallbtn primary";
+    enquireBtn.textContent = "විමසන්න · Enquire";
+    enquireBtn.addEventListener("click", () => window.askWhatsApp(item.title || "Invitation Design"));
+    actions.append(previewBtn, enquireBtn);
+    card.append(art, title, desc, actions);
+    gallery.appendChild(card);
+  });
+} catch (error) {
+  console.warn("VOWORA invitation gallery could not load Firestore cards:", error);
+}
+</script>
+
 </body>
 </html>
