@@ -1,48 +1,28 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+
     function isVoworaAdmin() {
       return request.auth != null
-        && request.auth.token.email == "srimalharsha@gmail.com"
-;
+        && request.auth.token.email == "srimalharsha@gmail.com";
     }
 
     match /invitations/{invitationId} {
-      // Visitors can only read active invitation cards.
-      allow get, list: if (resource.data.isActive == true)
-        || (isVoworaAdmin() && resource.data.createdBy == request.auth.uid);
+      // Admin can read invitations they created; visitors can read active cards.
+      allow get, list: if
+        (isVoworaAdmin() && resource.data.createdBy == request.auth.uid)
+        || resource.data.isActive == true;
 
+      // Admin can create a card only under their own account.
       allow create: if isVoworaAdmin()
-        && request.resource.data.createdBy == request.auth.uid
-        && request.resource.data.title is string
-        && request.resource.data.title.size() > 0
-        && request.resource.data.title.size() <= 90
-        && request.resource.data.brideName is string
-        && request.resource.data.brideName.size() > 0
-        && request.resource.data.groomName is string
-        && request.resource.data.groomName.size() > 0
-        && request.resource.data.eventDate is string
-        && request.resource.data.eventTime is string
-        && request.resource.data.venue is string
-        && request.resource.data.theme is string
-        && request.resource.data.category is string
-        && request.resource.data.imageUrl is string
-        && request.resource.data.description is string
-        && request.resource.data.price is number
-        && request.resource.data.isActive is bool;
+        && request.resource.data.createdBy == request.auth.uid;
 
+      // Admin can edit only their own cards and cannot transfer ownership.
       allow update: if isVoworaAdmin()
         && resource.data.createdBy == request.auth.uid
-        && request.resource.data.createdBy == resource.data.createdBy
-        && request.resource.data.title is string
-        && request.resource.data.title.size() > 0
-        && request.resource.data.brideName is string
-        && request.resource.data.brideName.size() > 0
-        && request.resource.data.groomName is string
-        && request.resource.data.groomName.size() > 0
-        && request.resource.data.imageUrl is string
-        && request.resource.data.isActive is bool;
+        && request.resource.data.createdBy == request.auth.uid;
 
+      // Admin can delete only their own cards.
       allow delete: if isVoworaAdmin()
         && resource.data.createdBy == request.auth.uid;
     }
