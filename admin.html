@@ -111,16 +111,12 @@ document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',
 function resetForm(){
   $('inviteForm').reset();$('isActive').checked=true;editingId=null;updateLivePreview();
   $('formHeading').textContent='අලුත් Invitation Card එකක් එකතු කරන්න';
-  $('saveBtn').textContent='Save Invitation Card';$('imagePreview').style.display='none';$('imagePreview').src='';
+  $('saveBtn').textContent='Save Invitation Card';updateLivePreview();
   showFormMessage('');
 }
 $('cancelBtn').addEventListener('click',()=>{resetForm();openTab('manageTab');});
 $('newInviteBtn').addEventListener('click',resetForm);
-$('imageUrl').addEventListener('input',()=>{
-  const url=$('imageUrl').value.trim();
-  if(url){$('imagePreview').src=url;$('imagePreview').style.display='block';}
-  else $('imagePreview').style.display='none';
-});
+$('imageUrl').addEventListener('input',updateLivePreview);
 $('loginForm').addEventListener('submit',async event=>{
   event.preventDefault();$('message').style.display='none';$('loginBtn').disabled=true;$('loginBtn').textContent='Please wait...';
   try{await signInWithEmailAndPassword(auth,$('email').value.trim(),$('password').value);}
