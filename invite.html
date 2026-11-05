@@ -157,6 +157,11 @@ body{background:#100f17;color:#fff8ef;font-family:Georgia,"Times New Roman",seri
 
 .card{position:relative;isolation:isolate}.card-photo-bg{position:absolute;inset:0;z-index:0;background-position:center;background-size:cover;background-repeat:no-repeat;opacity:var(--card-photo-opacity,.65);pointer-events:none}.card .frame,.card .buttons,.card .rsvp{position:relative;z-index:1}.card .frame{background:linear-gradient(145deg,#fffdf8b8,#f8f0e5b8)}
 /* Uploaded full invitation-card artwork, kept behind editable wedding details */
+.card.has-card-design{background:transparent!important;border-color:#d7b879}
+.card.has-card-design .card-design-bg{background-size:100% 100%;background-position:center;opacity:1!important}
+.card.has-card-design .frame{background:linear-gradient(145deg,#fffdf8e8,#f8f0e5e8);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);border-color:#bd985b}
+.card.has-card-design .buttons,.card.has-card-design .rsvp{background:#fffdf0dc;border-radius:14px;padding:12px}
+
 .card-design-bg{position:absolute;inset:0;z-index:0;background-position:center;background-size:cover;background-repeat:no-repeat;opacity:0;pointer-events:none}
 .card .frame,.card .buttons,.card .rsvp{position:relative;z-index:2}
 .card .frame{background:linear-gradient(145deg,#fffdf899,#f8f0e599)}
@@ -209,7 +214,17 @@ body{background:#100f17;color:#fff8ef;font-family:Georgia,"Times New Roman",seri
 import{initializeApp}from"https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";import{getFirestore,doc,getDoc,updateDoc,serverTimestamp}from"https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 const app=initializeApp({apiKey:"AIzaSyBodeTb_8XTiVO4ABEI8M5Ea30gFXrfrGc",authDomain:"vowora-6b0d1.firebaseapp.com",projectId:"vowora-6b0d1",storageBucket:"vowora-6b0d1.firebasestorage.app",messagingSenderId:"645328995192",appId:"1:645328995192:web:f8a6a8f3bc07f7f0dffe8d"},"voworaGuestInvitation");const db=getFirestore(app),p=new URLSearchParams(location.search),portal=p.get("p"),guest=p.get("g"),$=id=>document.getElementById(id);let w,g,storyItems=[],storyIndex=0,storyTimer=null,storyPaused=false;
 function esc(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function applyCardPhoto(data){const layer=document.querySelector(".card-photo-bg"),design=document.querySelector(".card-design-bg");if(!layer)return;const image=data.cardBackgroundImage||"";const transparency=Math.max(0,Math.min(90,Number(data.cardTransparency??35)));layer.style.backgroundImage=image?('url("'+image+'")'):"none";layer.style.setProperty("--unused","");document.querySelector(".card").style.setProperty("--card-photo-opacity",String(1-transparency/100));if(design){design.style.backgroundImage=data.cardDesignImage?('url("'+data.cardDesignImage+'")'):"none";design.style.opacity=data.cardDesignImage?String(1-Math.max(0,Math.min(90,Number(data.cardDesignTransparency??48)))/100):"0";}}
+function applyCardPhoto(data){
+ const layer=document.querySelector(".card-photo-bg"),design=document.querySelector(".card-design-bg"),card=document.querySelector(".card");
+ if(!layer||!card)return;
+ const image=data.cardBackgroundImage||"",transparency=Math.max(0,Math.min(90,Number(data.cardTransparency??35)));
+ layer.style.position="fixed";layer.style.inset="0";layer.style.zIndex="0";
+ layer.style.backgroundImage=image?'url("'+image+'")':"none";
+ layer.style.backgroundPosition="center";layer.style.backgroundSize="cover";layer.style.backgroundRepeat="no-repeat";
+ layer.style.opacity=String(1-transparency/100);
+ card.classList.toggle("has-card-design",!!data.cardDesignImage);
+ if(design){design.style.backgroundImage=data.cardDesignImage?'url("'+data.cardDesignImage+'")':"none";design.style.opacity=data.cardDesignImage?"1":"0";}
+}
 function applyDesign(){
  const scene=document.querySelector(".scene");
  const coupleArt=document.querySelector(".theme-couple-art");if(coupleArt){if(w.couplePhotoUrl){coupleArt.classList.add("has-photo");coupleArt.style.backgroundImage="linear-gradient(0deg,#1b172455,#1b172400 45%),url("+JSON.stringify(w.couplePhotoUrl)+")";coupleArt.style.opacity=String(1-Math.max(0,Math.min(90,Number(w.couplePhotoTransparency??0)))/100);coupleArt.setAttribute("aria-label","Wedding couple photograph")}else{coupleArt.classList.remove("has-photo");coupleArt.style.backgroundImage="";coupleArt.removeAttribute("aria-label");coupleArt.style.opacity="1"}}
