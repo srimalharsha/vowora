@@ -34,6 +34,24 @@
 @keyframes danceBride{to{transform:translateY(-13px) rotate(10deg)}}@keyframes danceGroom{to{transform:translateY(-13px) rotate(-10deg)}}
 @keyframes wave{to{transform:rotate(-35deg)}}@keyframes sparkle{to{opacity:.25;transform:scale(.65)}}@keyframes noteFloat{to{transform:translateY(-14px) rotate(12deg)}}@keyframes cameraFlash{0%,75%,100%{opacity:.15}80%{opacity:1}}
 @media(prefers-reduced-motion:reduce){.story-art *{animation:none!important}}
+/* illustrated 2D wedding scene motion */
+.story-art{width:min(520px,94vw);height:min(54vh,450px)}
+.story-art .bride-character,.story-art .groom-character{transform-box:fill-box;transform-origin:center bottom;will-change:transform}
+.story-art .bride-character{animation:brideIllustrated 3s ease-in-out infinite}
+.story-art .groom-character{animation:groomIllustrated 3s ease-in-out infinite}
+.story-art .dove{animation:doveGlide 5s ease-in-out infinite alternate;transform-box:fill-box}
+.story-art .floating-petals{animation:petalDrift 4s ease-in-out infinite alternate}
+.story-art .joined-hands{animation:handSway 2s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center}
+.story-art svg.kind-love .bride-character{animation:walkBride 1s ease-in-out infinite alternate}
+.story-art svg.kind-love .groom-character{animation:walkGroom 1s ease-in-out infinite alternate}
+.story-art svg.kind-proposal .groom-character{animation:proposalKneel 2.2s ease-in-out infinite}
+.story-art svg.kind-proposal .proposal-ring{animation:ringRise 1.3s ease-in-out infinite}
+.story-art svg.kind-ceremony .bride-character,.story-art svg.kind-ceremony .groom-character{animation:ceremonyBow 2.2s ease-in-out infinite}
+.story-art svg.kind-photos .bride-character,.story-art svg.kind-photos .groom-character{animation:photoPose 1.8s ease-in-out infinite alternate}
+.story-art svg.kind-dinner .bride-character,.story-art svg.kind-dinner .groom-character{animation:cheer 1.4s ease-in-out infinite}
+.story-art svg.kind-dance .bride-character{animation:danceBride .65s ease-in-out infinite alternate}
+.story-art svg.kind-dance .groom-character{animation:danceGroom .65s ease-in-out infinite alternate}
+@keyframes brideIllustrated{50%{transform:translateY(-5px) rotate(-1deg)}}@keyframes groomIllustrated{50%{transform:translateY(-4px) rotate(1deg)}}@keyframes walkBride{to{transform:translate(9px,-4px) rotate(3deg)}}@keyframes walkGroom{to{transform:translate(-9px,-4px) rotate(-3deg)}}@keyframes doveGlide{to{transform:translate(24px,-8px)}}@keyframes petalDrift{to{transform:translate(12px,-10px) rotate(12deg)}}@keyframes handSway{to{transform:translateY(-3px) rotate(4deg)}}
 .play-story-launch{margin-top:14px}@media(prefers-reduced-motion:reduce){.story-art{animation:none!important}}
 .scene{--accent:#b94f79;--accent-light:#f5c5d6}.card{border-color:var(--accent-light);background:linear-gradient(145deg,#fffdf8f7,#fcecf2f7);outline:1px solid var(--accent);outline-offset:7px}.frame{border-color:var(--accent)}.guest,.personal{color:var(--accent)}.couple{color:var(--accent)}.amp{color:var(--accent)}.rule{background:var(--accent)}.btn{background:var(--accent)}.btn.gold{background:linear-gradient(135deg,var(--accent-light),var(--accent));color:#24151c}
 .scene[data-template="royal"] .card{background:linear-gradient(145deg,#fff7df,#f1dfb5);box-shadow:0 25px 90px #0009,0 0 45px #f4d58a55}.scene[data-template="royal"] .frame{border-width:3px}
@@ -60,23 +78,32 @@ dance:{title:"Let’s Celebrate",caption:"Music, laughter and a dance to remembe
 closing:{title:"Be There With Us",caption:"Your presence will make our day complete.",kind:"closing"}
 };
 function cartoon(kind){
-const scenes={
-couple:{bg:"#f6d9e3",ground:"#d78ca6",deco:"<path d='M45 95 Q80 35 115 95 M285 95 Q320 35 355 95' fill='none' stroke='#fff' stroke-width='5'/>"},
-love:{bg:"#f9e8d5",ground:"#e6b7a0",deco:"<path class='heart' d='M200 75 C165 45 140 90 200 130 C260 90 235 45 200 75Z' fill='#e66b91'/>"},
-proposal:{bg:"#e8e0f6",ground:"#b9a5d9",deco:"<g class='proposal-ring'><circle cx='200' cy='75' r='13' fill='none' stroke='#e8bd56' stroke-width='6'/><path d='M188 75 L200 55 L212 75' fill='none' stroke='#fff1b9' stroke-width='4'/></g>"},
-ceremony:{bg:"#e5f0e3",ground:"#9fc59f",deco:"<path d='M85 210 V95 Q200 -10 315 95 V210' fill='none' stroke='#fff' stroke-width='12'/><path d='M95 100 Q200 25 305 100' fill='none' stroke='#d8a5b7' stroke-width='10'/>"},
-photos:{bg:"#e1edf5",ground:"#9dbed1",deco:"<rect x='145' y='35' width='110' height='80' rx='12' fill='#fff' stroke='#bd9b5d' stroke-width='7'/><circle cx='200' cy='75' r='22' fill='#8db2c4'/><path class='flash' d='M200 30 L210 52 L235 55 L215 72 L220 96 L200 83 L180 96 L185 72 L165 55 L190 52Z' fill='#fff' opacity='.3'/>"},
-dinner:{bg:"#f8e8c8",ground:"#d6ad68",deco:"<path d='M125 125 Q200 80 275 125 L260 150 H140Z' fill='#fff'/><circle cx='200' cy='105' r='27' fill='#e9a4a8'/><path d='M200 78 V48 M185 48 H215' stroke='#fff' stroke-width='5'/>"},
-dance:{bg:"#dcdcf5",ground:"#8b83c5",deco:"<path class='dance-note' d='M65 55 l10 20 -10 20 -10 -20Z M330 45 l10 20 -10 20 -10 -20Z' fill='#f5cf73'/><path d='M165 70 Q200 35 235 70' fill='none' stroke='#fff' stroke-width='7'/>"},
-closing:{bg:"#f7e1e8",ground:"#d89bb0",deco:"<path class='heart' d='M200 55 C165 25 140 70 200 110 C260 70 235 25 200 55Z' fill='#d56e91'/><circle class='spark' cx='90' cy='65' r='8' fill='#fff'/><circle class='spark' cx='310' cy='55' r='8' fill='#fff'/>"}
-};
-const x=scenes[kind]||scenes.couple;
 const bride=esc(w?.brideName||"Bride"),groom=esc(w?.groomName||"Groom");
-return `<svg class="kind-${kind}" viewBox="0 0 400 300" role="img" aria-label="Animated cartoon wedding scene"><defs><linearGradient id="sky" x2="0" y2="1"><stop stop-color="${x.bg}"/><stop offset="1" stop-color="#fff7ed"/></linearGradient></defs><rect width="400" height="300" rx="28" fill="url(#sky)"/><circle class="cloud" cx="80" cy="48" r="22" fill="#fff" opacity=".7"/><circle class="cloud" cx="320" cy="55" r="28" fill="#fff" opacity=".7"/>${x.deco}<path d="M0 220 Q100 185 200 220 T400 215 V300 H0Z" fill="${x.ground}"/>
-<g class="bride-character" stroke="#604453" stroke-width="3" stroke-linejoin="round"><circle cx="145" cy="119" r="27" fill="#e9b68e"/><path d="M119 116 Q115 77 149 82 Q177 85 174 119 Q154 99 137 103Z" fill="#4a2d32"/><path d="M112 153 Q145 139 178 153 L194 231 H96Z" fill="#fff"/><path d="M112 153 Q145 178 178 153 L194 231 H96Z" fill="#f2c8d5" opacity=".65"/><path class="arm" d="M117 163 Q100 179 127 190" fill="none" stroke="#e9b68e" stroke-width="10" stroke-linecap="round"/><path class="arm wave-arm" d="M173 163 Q190 145 184 127" fill="none" stroke="#e9b68e" stroke-width="10" stroke-linecap="round"/><circle cx="137" cy="121" r="2.5" fill="#302a27"/><circle cx="155" cy="121" r="2.5" fill="#302a27"/><path d="M137 133 Q146 140 155 133" fill="none" stroke="#9d4e5e" stroke-width="2"/></g>
-<g class="groom-character" stroke="#604453" stroke-width="3" stroke-linejoin="round"><circle cx="255" cy="119" r="27" fill="#d99f78"/><path d="M229 113 Q229 77 258 82 Q285 85 283 117 Q263 97 244 102Z" fill="#29252b"/><path d="M218 153 Q255 139 292 153 L305 231 H205Z" fill="#31466d"/><path d="M225 154 L255 180 L285 154" fill="none" stroke="#fff" stroke-width="5"/><path class="arm" d="M224 164 Q205 181 192 185" fill="none" stroke="#d99f78" stroke-width="10" stroke-linecap="round"/><path class="arm wave-arm" d="M286 163 Q303 146 296 128" fill="none" stroke="#d99f78" stroke-width="10" stroke-linecap="round"/><circle cx="247" cy="121" r="2.5" fill="#302a27"/><circle cx="265" cy="121" r="2.5" fill="#302a27"/><path d="M247 133 Q255 140 264 133" fill="none" stroke="#9d4e5e" stroke-width="2"/></g>
-<path d="M174 174 Q200 194 226 174" fill="none" stroke="#e9b68e" stroke-width="9" stroke-linecap="round"/><circle class="spark" cx="200" cy="184" r="6" fill="#f4cf78"/>
-<text class="scene-name" x="145" y="260" text-anchor="middle">${bride.length>13?bride.slice(0,12)+"…":bride}</text><text class="scene-name" x="255" y="260" text-anchor="middle">${groom.length>13?groom.slice(0,12)+"…":groom}</text></svg>`;
+return `<svg class="kind-${kind}" viewBox="0 0 480 340" role="img" aria-label="2D illustrated bride and groom in a flower garden">
+<defs><linearGradient id="sky" x2="0" y2="1"><stop stop-color="#f8dfd8"/><stop offset="1" stop-color="#fff8e9"/></linearGradient><linearGradient id="ivory" x2="1" y2="1"><stop stop-color="#fffdf7"/><stop offset="1" stop-color="#d9bdac"/></linearGradient><linearGradient id="gold" x2="1" y2="1"><stop stop-color="#fff0c7"/><stop offset="1" stop-color="#bd9257"/></linearGradient></defs>
+<rect width="480" height="340" rx="25" fill="url(#sky)"/><circle cx="80" cy="65" r="35" fill="#fff" opacity=".5"/><circle cx="395" cy="55" r="48" fill="#fff" opacity=".45"/>
+<path d="M0 232Q120 200 240 232T480 225V340H0Z" fill="#9eb58d"/><path d="M145 340Q200 250 240 225Q280 250 350 340Z" fill="#d7b59b"/>
+<path d="M58 260V135Q240 -55 422 135V260" fill="none" stroke="#b58a54" stroke-width="12"/><path d="M70 255V140Q240 -25 410 140V255" fill="none" stroke="#fff5e7" stroke-width="7"/>
+<g fill="#e9a9b9"><circle cx="76" cy="150" r="12"/><circle cx="105" cy="111" r="11"/><circle cx="145" cy="79" r="12"/><circle cx="190" cy="52" r="11"/><circle cx="240" cy="42" r="13"/><circle cx="290" cy="55" r="11"/><circle cx="337" cy="83" r="12"/><circle cx="377" cy="119" r="11"/><circle cx="405" cy="160" r="12"/></g>
+<g fill="#fff0d1"><circle cx="118" cy="95" r="5"/><circle cx="180" cy="58" r="5"/><circle cx="270" cy="48" r="5"/><circle cx="350" cy="91" r="5"/></g>
+<g class="dove" fill="#fff" stroke="#d8c6b8" stroke-width="1.5"><path d="M150 52q-20-18-31-2 16 0 20 17-17-8-27 5 24 3 39-8 12 6 22-3-13 0-23-9z"/><path d="M330 45q20-18 31-2-16 0-20 17 17-8 27 5-24 3-39-8-12 6-22-3 13 0 23-9z"/></g>
+<g fill="#f4d3dd"><circle cx="24" cy="278" r="12"/><circle cx="47" cy="286" r="10"/><circle cx="69" cy="273" r="11"/><circle cx="410" cy="278" r="12"/><circle cx="437" cy="287" r="10"/><circle cx="459" cy="271" r="11"/></g>
+<ellipse cx="240" cy="300" rx="110" ry="14" fill="#604c43" opacity=".17"/>
+<g class="groom-character" stroke="#60494a" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+<path d="M203 268l-4 48h20l8-48M247 268l6 48h20l-8-48" fill="#594452"/><path d="M196 311h28v9h-31zM251 311h28v9h-31z" fill="#332b35"/>
+<path d="M195 158q-14 7-17 28l-7 79q36 15 82 0l-8-83q-5-20-23-24z" fill="url(#gold)"/><path d="M224 158l14 17 14-17-9 91h-12z" fill="#7b284f"/><path d="M224 158l14 17-10 12-12-19M252 158l-14 17 10 12 12-19" fill="#fff9ed"/>
+<path d="M201 184l-15 52M260 184l10 50" stroke="#b58a54" stroke-width="3"/><g fill="#b58a54"><circle cx="238" cy="199" r="2.5"/><circle cx="238" cy="216" r="2.5"/><circle cx="238" cy="233" r="2.5"/></g>
+<path d="M204 130q0-31 31-31 31 1 31 34l-5 28q-26 18-52 0z" fill="#c98d6d"/><path d="M203 130q-5-41 31-45 35 2 36 43-17-19-35-18-17 0-32 20z" fill="#33252b"/><path d="M216 138q5-4 10 0M240 138q5-4 10 0" fill="none"/><circle cx="222" cy="142" r="2.5" fill="#30242a" stroke="none"/><circle cx="247" cy="142" r="2.5" fill="#30242a" stroke="none"/><path d="M227 154q10 7 19-1" fill="none" stroke="#914e4d"/><path d="M199 180q-17 9-16 31l-2 30" fill="none" stroke="#c98d6d" stroke-width="11"/><path class="arm" d="M264 180q15 9 14 29l-18 27" fill="none" stroke="#c98d6d" stroke-width="11"/>
+</g>
+<g class="bride-character" stroke="#76545a" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+<path d="M292 267l-3 49h19l8-49M326 267l6 49h19l-8-49" fill="#ead8d0"/><path d="M285 311h28v9h-31zM331 311h28v9h-31z" fill="#9e7b69"/>
+<path d="M284 157q-20 5-23 27l-7 79q42 24 92 0l-9-80q-6-21-27-26z" fill="url(#ivory)"/><path d="M285 161q16 29 33 2l25 98q-35 18-72 0z" fill="#fff9ef" opacity=".8"/><path d="M280 174q-10 38-10 81M335 174q14 42 10 81" fill="none" stroke="#c9a276" stroke-width="3"/><g fill="#c9a276"><circle cx="289" cy="190" r="2"/><circle cx="307" cy="207" r="2"/><circle cx="327" cy="190" r="2"/><circle cx="286" cy="236" r="2"/><circle cx="330" cy="241" r="2"/></g>
+<path d="M283 129q0-35 31-36 31 2 32 37l-5 27q-27 19-53-1z" fill="#dba17f"/><path d="M280 130q-4-42 34-49 38 4 37 48-13-23-35-24-18 0-36 25z" fill="#35252b"/><path d="M279 118q-7 35 3 50M346 115q8 35-4 52" fill="none" stroke="#35252b" stroke-width="8"/><g fill="#fff0d1" stroke="#c8a66c"><circle cx="348" cy="140" r="4"/><circle cx="351" cy="151" r="4"/><circle cx="346" cy="162" r="4"/></g><path d="M295 138q5-4 10 0M320 138q5-4 10 0" fill="none"/><circle cx="301" cy="142" r="2.5" fill="#30242a" stroke="none"/><circle cx="327" cy="142" r="2.5" fill="#30242a" stroke="none"/><path d="M307 154q8 7 16 0" fill="none" stroke="#a44f5d"/><path d="M288 167q-18 10-16 30l-13 34" fill="none" stroke="#dba17f" stroke-width="10"/><path class="arm" d="M334 167q17 10 18 28l-18 35" fill="none" stroke="#dba17f" stroke-width="10"/><path d="M285 104q-8-13-1-22M301 94q-3-15 8-22M328 94q9-13 4-21" fill="none" stroke="#fff5df" stroke-width="5"/>
+</g>
+<path class="joined-hands" d="M268 235q8-10 15-2l7 7q-7 10-15 7z" fill="#d49a7b" stroke="#76545a" stroke-width="2"/>
+<g class="proposal-ring"><circle cx="286" cy="235" r="7" fill="none" stroke="#e4bf66" stroke-width="3"/><path d="M282 230l4-7 4 7" fill="none" stroke="#fff0b5" stroke-width="2"/></g>
+<g class="floating-petals" fill="#f4b8c8"><path d="M120 205q15-10 12 8-8 8-12-8z"/><path d="M370 185q15-10 12 8-8 8-12-8z"/><path d="M170 275q15-10 12 8-8 8-12-8z"/></g>
+<text class="scene-name" x="240" y="334" text-anchor="middle">${bride.length>15?bride.slice(0,14)+"…":bride} &amp; ${groom.length>15?groom.slice(0,14)+"…":groom}</text></svg>`;
 }
 let storyItems=[],storyIndex=0,storyTimer=null,storyPaused=false;
 function renderStory(){if(!storyItems.length)return;const item=storyCatalog[storyItems[storyIndex]]||storyCatalog.intro;$("storyArt").innerHTML=cartoon(item.kind);$("storyTitle").textContent=item.title;$("storyCaption").textContent=item.caption;$("storyProgress").innerHTML=storyItems.map((_,i)=>"<i class='"+(i===storyIndex?"active":"")+"'></i>").join("");$("storyPause").textContent=storyPaused?"▶ Play":"Ⅱ Pause"}
