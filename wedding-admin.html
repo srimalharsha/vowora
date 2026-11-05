@@ -131,10 +131,12 @@ function makeAdminFold(node,title,key){
   if(["design","design-template","design-motion","design-animation","design-palette","studio-0","studio-1","story-0","story-1","final-preview"].includes(key))return;
   const details=document.createElement("details");
   details.className="admin-fold";
-  details.open=false;
+  details.open=true;
   details.dataset.feature=key;
   const summary=document.createElement("summary");
   summary.className="admin-fold-summary";
+  summary.addEventListener("click",e=>{if(!e.target.classList.contains("admin-fold-toggle"))e.preventDefault()});
+  details.addEventListener("toggle",()=>{if(!details.open)details.open=true});
   const name=document.createElement("span");name.textContent=title;
   const tools=document.createElement("span");tools.className="admin-fold-tools";
   const state=document.createElement("span");state.className="admin-fold-state";state.textContent="Enabled";
@@ -153,7 +155,7 @@ function makeAdminFold(node,title,key){
   node.dataset.foldReady="1";
 }
 const adminStyle=document.createElement("style");
-adminStyle.textContent='.admin-fold{border:1px solid #eadbd5;border-radius:14px;background:#fffdfb;margin:12px 0;overflow:hidden}.admin-fold-summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 16px;cursor:pointer;color:#7b284f;font-weight:bold;background:linear-gradient(110deg,#fff8f8,#fffdf8)}.admin-fold-summary::-webkit-details-marker{display:none}.admin-fold-summary:after{content:"＋";font-size:18px;margin-left:auto}.admin-fold[open]>.admin-fold-summary:after{content:"−"}.admin-fold-tools{display:flex;align-items:center;gap:9px;font-size:11px;color:#796f68}.admin-fold-toggle{width:18px;height:18px;accent-color:#7b284f}.admin-fold-body{padding:0 14px 14px}.admin-fold-body>.admin-card{margin-top:0}.admin-fold.feature-disabled>.admin-fold-summary{opacity:.65;background:#f3f0ef}.admin-fold.feature-disabled .admin-fold-state{color:#a83c45}.admin-fold.feature-disabled>.admin-fold-body{display:none}.admin-fold-summary>span:first-child{flex:1}';
+adminStyle.textContent='.admin-fold{border:1px solid #eadbd5;border-radius:14px;background:#fffdfb;margin:12px 0;overflow:hidden}.admin-fold-summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 16px;cursor:pointer;color:#7b284f;font-weight:bold;background:linear-gradient(110deg,#fff8f8,#fffdf8)}.admin-fold-summary::-webkit-details-marker{display:none}.admin-fold-summary{cursor:default}.admin-fold-summary:after{display:none!important}.admin-fold-tools{display:flex;align-items:center;gap:9px;font-size:11px;color:#796f68}.admin-fold-toggle{width:18px;height:18px;accent-color:#7b284f}.admin-fold-body{padding:0 14px 14px}.admin-fold-body>.admin-card{margin-top:0}.admin-fold.feature-disabled>.admin-fold-summary{opacity:.65;background:#f3f0ef}.admin-fold.feature-disabled .admin-fold-state{color:#a83c45}.admin-fold.feature-disabled>.admin-fold-body{display:none}.admin-fold-summary>span:first-child{flex:1}';
 adminStyle.textContent+=".vowora-hidden-admin-preview{display:none!important}";
 document.head.append(adminStyle);
 const mainGrid=document.querySelector("#weddingForm > .grid");
