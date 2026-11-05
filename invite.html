@@ -88,7 +88,7 @@ const skin=["#c98d6d","#b97858","#d49a7b","#a96e54","#dba17f"][ci%5];svg.querySe
 const motionNames=["walk","sway","bow","dance","turn","glide","bounce","step","celebrate","pose"];
 const motion=motionNames[mi%motionNames.length],duration=(1.1+(mi%7)*.19).toFixed(2)+"s",dx=5+(mi%9)*2,dy=5+(mi%6)*2,rot=2+(mi%8)*1.5;
 const style=document.getElementById("voworaMotionStyles")||document.createElement("style");style.id="voworaMotionStyles";
-style.textContent="@keyframes voworaCoupleMotion{0%,100%{transform:translate(0,0) rotate(0)}25%{transform:translate("+dx+"px,-"+dy+"px) rotate("+rot+"deg)}50%{transform:translate(-"+dx+"px,-"+(dy/2)+"px) rotate(-"+rot+"deg)}75%{transform:translate(0,0) rotate(0)}}.kind-couple .groom-character,.kind-couple .bride-character{transform-box:fill-box;transform-origin:center bottom}";
+style.textContent="@keyframes voworaCoupleMotion{0%,100%{transform:translate(0,0) rotate(0)}25%{transform:translate("+dx+"px,-"+dy+"px) rotate("+rot+"deg)}50%{transform:translate(-"+dx+"px,-"+(dy/2)+"px) rotate(-"+rot+"deg)}75%{transform:translate(0,0) rotate(0)}}#storyArt svg .groom-character,#storyArt svg .bride-character{transform-box:fill-box;transform-origin:center bottom;transform-style:preserve-3d;will-change:transform}";
 document.head.appendChild(style);
 svg.querySelectorAll(".groom-character,.bride-character").forEach((el,n)=>{el.style.animation="voworaCoupleMotion "+duration+" ease-in-out infinite";el.style.animationDelay=(n*.12)+"s"});
 svg.dataset.motionName=motion;
