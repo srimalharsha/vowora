@@ -222,7 +222,7 @@ function applyCardPhoto(data){
  layer.style.backgroundImage=image?'url("'+image+'")':"none";
  layer.style.opacity=String(1-transparency/100);
  card.classList.toggle("has-card-design",!!data.cardDesignImage);
- if(design){design.style.backgroundImage=data.cardDesignImage?'url("'+data.cardDesignImage+'")':"none";design.style.opacity=data.cardDesignImage?"1":"0";}
+ if(design){design.style.backgroundImage=data.cardDesignImage?'url("'+data.cardDesignImage+'")':"none";const designTransparency=Math.max(0,Math.min(90,Number(data.cardDesignTransparency??0)));design.style.opacity=data.cardDesignImage?String(1-designTransparency/100):"0";}
 }
 function applyDesign(){
  const scene=document.querySelector(".scene");
