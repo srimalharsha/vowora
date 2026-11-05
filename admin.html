@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="si">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#302a27">
+<title>VOWORA | Admin Login</title>
+<style>
+:root{--ink:#302a27;--muted:#796f68;--gold:#b58a54;--wine:#7b284f;--cream:#fffaf8;--pink:#f8eaf0}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(135deg,#fffaf8,#f8eaf0);font-family:Arial,sans-serif;color:var(--ink)}
+.panel{width:min(100%,430px);background:#fff;border:1px solid #eadbd5;border-radius:22px;padding:30px;box-shadow:0 18px 55px #4b273018}
+.brand{text-align:center;margin-bottom:26px}.brand strong{display:block;font-family:Georgia,serif;font-size:34px;letter-spacing:5px;color:var(--wine)}.brand span{font-size:12px;letter-spacing:3px;color:var(--gold)}
+h1{font-size:22px;text-align:center;margin:0 0 8px}p{color:var(--muted);text-align:center;font-size:14px;line-height:1.6;margin:0 0 24px}
+label{display:block;font-size:13px;font-weight:700;margin:15px 0 7px}input{width:100%;padding:14px;border:1px solid #dfd2cc;border-radius:10px;font-size:15px;outline:none}input:focus{border-color:var(--gold);box-shadow:0 0 0 3px #b58a5420}
+button{width:100%;border:0;border-radius:10px;padding:14px;background:var(--wine);color:#fff;font-size:15px;font-weight:700;margin-top:20px;cursor:pointer}button:disabled{opacity:.6;cursor:wait}
+#message{display:none;margin-top:16px;padding:12px;border-radius:9px;font-size:13px;line-height:1.5;background:#fff0f0;color:#9b3030}#message.ok{background:#edf8ef;color:#246b36}
+#dashboard{display:none;text-align:center}#dashboard h2{font-size:21px}#dashboard button{background:#5d514b}
+.small{font-size:12px;margin-top:20px;color:#8c817b;text-align:center}
+</style>
+</head>
+<body>
+<main class="panel">
+  <div class="brand"><strong>VOWORA</strong><span>INVITATION ALBUM</span></div>
+  <section id="login">
+    <h1>Admin Login</h1>
+    <p>VOWORA පරිපාලන පද්ධතියට පිවිසෙන්න.</p>
+    <form id="loginForm">
+      <label for="email">Admin Email</label>
+      <input id="email" type="email" autocomplete="username" placeholder="admin@example.com" required>
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password" placeholder="Password" required>
+      <button id="loginBtn" type="submit">Login</button>
+    </form>
+    <div id="message" role="status"></div>
+  </section>
+  <section id="dashboard">
+    <h2>Login සාර්ථකයි</h2>
+    <p id="welcome"></p>
+    <p>Admin authentication සම්බන්ධතාවය සාර්ථකයි. Invitation management කොටස ඊළඟ අදියරේදී එක් කරනු ඇත.</p>
+    <button id="logoutBtn" type="button">Logout</button>
+  </section>
+  <div class="small">Powered by SriHarsha Digital</div>
+</main>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBodeTb_8XTiVO4ABEI8M5Ea30gFXrfrGc",
+  authDomain: "vowora-6b0d1.firebaseapp.com",
+  projectId: "vowora-6b0d1",
+  storageBucket: "vowora-6b0d1.firebasestorage.app",
+  messagingSenderId: "645328995192",
+  appId: "1:645328995192:web:f8a6a8f3bc07f7f0dffe8d"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const loginSection = document.getElementById("login");
+const dashboard = document.getElementById("dashboard");
+const message = document.getElementById("message");
+const loginBtn = document.getElementById("loginBtn");
+
+function showMessage(text) {
+  message.textContent = text;
+  message.className = "";
+  message.style.display = "block";
+}
+onAuthStateChanged(auth, user => {
+  if (user) {
+    loginSection.style.display = "none";
+    dashboard.style.display = "block";
+    document.getElementById("welcome").textContent = user.email || "Admin";
+  } else {
+    dashboard.style.display = "none";
+    loginSection.style.display = "block";
+  }
+});
+document.getElementById("loginForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  message.style.display = "none";
+  loginBtn.disabled = true;
+  loginBtn.textContent = "Please wait...";
+  try {
+    await signInWithEmailAndPassword(auth,
+      document.getElementById("email").value.trim(),
+      document.getElementById("password").value);
+  } catch (error) {
+    const errors = {
+      "auth/invalid-credential": "Email හෝ Password වැරදියි.",
+      "auth/user-not-found": "මෙම Email එකට Admin ගිණුමක් නැහැ.",
+      "auth/wrong-password": "Password එක වැරදියි.",
+      "auth/invalid-email": "නිවැරදි Email ලිපිනයක් ඇතුළත් කරන්න.",
+      "auth/too-many-requests": "උත්සාහයන් වැඩියි. ටික වේලාවකින් නැවත උත්සාහ කරන්න."
+    };
+    showMessage(errors[error.code] || "Login අසාර්ථකයි. Firebase Authentication සැකසුම් පරීක්ෂා කරන්න.");
+  } finally {
+    loginBtn.disabled = false;
+    loginBtn.textContent = "Login";
+  }
+});
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+  await signOut(auth);
+});
+</script>
+</body>
+</html>
