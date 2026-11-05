@@ -129,7 +129,7 @@ $("logout").onclick=()=>signOut(auth);
 function adminFeatureOn(key){const fold=document.querySelector('.admin-fold[data-feature="'+key+'"]');return !fold||!!fold.querySelector(".admin-fold-toggle")?.checked}
 function makeAdminFold(node,title,key){
   if(!node||node.dataset.foldReady)return;
-  if(["design","design-motion","design-animation","design-palette","studio-0","studio-1"].includes(key))return;
+  if(["design","design-template","design-motion","design-animation","design-palette","studio-0","studio-1","story-0","story-1","final-preview"].includes(key))return;
   const details=document.createElement("details");
   details.className="admin-fold";
   details.open=false;
@@ -155,6 +155,7 @@ function makeAdminFold(node,title,key){
 }
 const adminStyle=document.createElement("style");
 adminStyle.textContent='.admin-fold{border:1px solid #eadbd5;border-radius:14px;background:#fffdfb;margin:12px 0;overflow:hidden}.admin-fold-summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 16px;cursor:pointer;color:#7b284f;font-weight:bold;background:linear-gradient(110deg,#fff8f8,#fffdf8)}.admin-fold-summary::-webkit-details-marker{display:none}.admin-fold-summary:after{content:"＋";font-size:18px;margin-left:auto}.admin-fold[open]>.admin-fold-summary:after{content:"−"}.admin-fold-tools{display:flex;align-items:center;gap:9px;font-size:11px;color:#796f68}.admin-fold-toggle{width:18px;height:18px;accent-color:#7b284f}.admin-fold-body{padding:0 14px 14px}.admin-fold-body>.admin-card{margin-top:0}.admin-fold.feature-disabled>.admin-fold-summary{opacity:.65;background:#f3f0ef}.admin-fold.feature-disabled .admin-fold-state{color:#a83c45}.admin-fold.feature-disabled>.admin-fold-body{display:none}.admin-fold-summary>span:first-child{flex:1}';
+adminStyle.textContent+=".vowora-hidden-admin-preview{display:none!important}";
 document.head.append(adminStyle);
 const mainGrid=document.querySelector("#weddingForm > .grid");
 if(mainGrid){
@@ -172,12 +173,21 @@ if(mainGrid){
   const motionBlock=$("cardMotion")?.parentElement;
   if(motionBlock)makeAdminFold(motionBlock,"💫 Card Opening Animation","design-motion");
   const studio=mainGrid.querySelector(".studio-grid");
+   const studioHeading=studio?.parentElement?.querySelector(":scope > .section-title");
+   if(studioHeading)studioHeading.remove();
   if(studio){
     [...studio.children].forEach((card,i)=>makeAdminFold(card,card.querySelector(".section-title")?.textContent||["🌅 Scene Time","🎨 Colors","🖼️ Upload Card Design","💕 Couple Photo Gallery","🌄 Background Photo"][i]||"Studio Setting","studio-"+i));
   }
   const columns=mainGrid.querySelector(".admin-columns");
+   if(columns){
+     const storyHeading=columns.querySelector(":scope > .admin-card:first-child > .section-title");
+     if(storyHeading)storyHeading.remove();
+     const videoPreview=columns.querySelector(":scope > .admin-card:nth-child(2)");
+     if(videoPreview)videoPreview.classList.add("vowora-hidden-admin-preview");
+   }
   if(columns){[...columns.children].forEach((card,i)=>makeAdminFold(card,card.querySelector(".section-title")?.textContent||(i?"Video Story Preview":"🎬 Wedding Story & Music"),"story-"+i));}
   const preview=mainGrid.querySelector("#designPreview");
+   if(preview)preview.classList.add("vowora-hidden-admin-preview");
   if(preview){const box=document.createElement("div");box.className="admin-fold-content";preview.parentNode.insertBefore(box,preview);box.append(preview);makeAdminFold(box,"👁️ Final Card Design Preview","final-preview");}
 }
 
