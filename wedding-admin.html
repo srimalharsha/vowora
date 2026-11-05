@@ -181,7 +181,10 @@ if(mainGrid){
    const studioHeading=studio?.parentElement?.querySelector(":scope > .section-title");
    if(studioHeading)studioHeading.remove();
   if(studio){
-    [...studio.children].forEach((card,i)=>makeAdminFold(card,card.querySelector(".section-title")?.textContent||["🌅 Scene Time","🎨 Colors","🖼️ Upload Card Design","💕 Couple Photo Gallery","🌄 Background Photo"][i]||"Studio Setting","studio-"+i));
+    [...studio.children].forEach((card,i)=>{
+      if(i===3){card.style.display="none";return;}
+      makeAdminFold(card,card.querySelector(".section-title")?.textContent||["🌅 Scene Time","🎨 Colors","","💕 Couple Photo Gallery","🌄 Background Photo"][i]||"Studio Setting","studio-"+i);
+    });
   }
   const columns=mainGrid.querySelector(".admin-columns");
    if(columns){
