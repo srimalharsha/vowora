@@ -157,9 +157,9 @@ document.head.append(adminStyle);
 const mainGrid=document.querySelector("#weddingForm > .grid");
 if(mainGrid){
   const direct=[...mainGrid.children];
-  const basics=direct.slice(0,7);
+  const basics=direct.slice(0,6);
   if(basics.length){const box=document.createElement("div");box.className="admin-fold-content";basics[0].parentNode.insertBefore(box,basics[0]);basics.forEach(n=>box.append(n));makeAdminFold(box,"💍 මූලික Wedding විස්තර","basics");}
-  const designNodes=[...mainGrid.children].filter(n=>n.classList.contains("full") && (n.querySelector("#templateChoices")||n.querySelector("#palette")));
+  const designNodes=[...mainGrid.children].slice(6,10);
   if(designNodes.length){const box=document.createElement("div");box.className="admin-fold-content";designNodes[0].parentNode.insertBefore(box,designNodes[0]);designNodes.forEach(n=>box.append(n));makeAdminFold(box,"🎨 Invitation Card Design & Animation","design");}
   const studio=mainGrid.querySelector(".studio-grid");
   if(studio){
