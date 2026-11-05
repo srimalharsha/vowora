@@ -4,18 +4,31 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#302a27">
-<title>VOWORA | Admin Login</title>
+<title>VOWORA | Admin Dashboard</title>
 <style>
 :root{--ink:#302a27;--muted:#796f68;--gold:#b58a54;--wine:#7b284f;--cream:#fffaf8;--pink:#f8eaf0}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(135deg,#fffaf8,#f8eaf0);font-family:Arial,sans-serif;color:var(--ink)}
-.panel{width:min(100%,430px);background:#fff;border:1px solid #eadbd5;border-radius:22px;padding:30px;box-shadow:0 18px 55px #4b273018}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;padding:24px;background:linear-gradient(135deg,#fffaf8,#f8eaf0);font-family:Arial,sans-serif;color:var(--ink)}
+.panel{width:min(100%,960px);margin:20px auto;background:#fff;border:1px solid #eadbd5;border-radius:22px;padding:clamp(20px,4vw,36px);box-shadow:0 18px 55px #4b273018}
 .brand{text-align:center;margin-bottom:26px}.brand strong{display:block;font-family:Georgia,serif;font-size:34px;letter-spacing:5px;color:var(--wine)}.brand span{font-size:12px;letter-spacing:3px;color:var(--gold)}
-h1{font-size:22px;text-align:center;margin:0 0 8px}p{color:var(--muted);text-align:center;font-size:14px;line-height:1.6;margin:0 0 24px}
-label{display:block;font-size:13px;font-weight:700;margin:15px 0 7px}input{width:100%;padding:14px;border:1px solid #dfd2cc;border-radius:10px;font-size:15px;outline:none}input:focus{border-color:var(--gold);box-shadow:0 0 0 3px #b58a5420}
-button{width:100%;border:0;border-radius:10px;padding:14px;background:var(--wine);color:#fff;font-size:15px;font-weight:700;margin-top:20px;cursor:pointer}button:disabled{opacity:.6;cursor:wait}
-#message{display:none;margin-top:16px;padding:12px;border-radius:9px;font-size:13px;line-height:1.5;background:#fff0f0;color:#9b3030}#message.ok{background:#edf8ef;color:#246b36}
-#dashboard{display:none;text-align:center}#dashboard h2{font-size:21px}#dashboard button{background:#5d514b}
-.small{font-size:12px;margin-top:20px;color:#8c817b;text-align:center}
+h1{font-size:23px;text-align:center;margin:0 0 8px}h2{font-size:21px;margin:0 0 8px}p{color:var(--muted);font-size:14px;line-height:1.6}
+label{display:block;font-size:13px;font-weight:700;margin:14px 0 7px}
+input,textarea,select{width:100%;padding:13px;border:1px solid #dfd2cc;border-radius:10px;font-size:15px;outline:none;background:#fff;color:var(--ink)}
+input:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 3px #b58a5420}
+button{border:0;border-radius:10px;padding:13px 17px;background:var(--wine);color:#fff;font-size:14px;font-weight:700;cursor:pointer}
+button:disabled{opacity:.6;cursor:wait}.login-btn{width:100%;margin-top:20px}
+#login{max-width:430px;margin:auto}#message{display:none;margin-top:16px;padding:12px;border-radius:9px;font-size:13px;line-height:1.5;background:#fff0f0;color:#9b3030}#message.ok{background:#edf8ef;color:#246b36}
+#dashboard{display:none}.welcome{text-align:center;margin-bottom:24px}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;border-bottom:1px solid #eadbd5;padding-bottom:14px;margin:20px 0}
+.tabs button{background:#f5edf0;color:var(--wine)}.tabs button.active{background:var(--wine);color:#fff}
+.tab-panel{display:none}.tab-panel.active{display:block}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}.full{grid-column:1/-1}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.secondary{background:#766963}.danger{background:#a83c45}.muted{color:var(--muted)}
+.card-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-top:18px}
+.inv-card{border:1px solid #eadbd5;border-radius:14px;overflow:hidden;background:#fff}.inv-card img{width:100%;height:160px;object-fit:cover;background:#f8eaf0}.inv-info{padding:13px}.inv-info h3{font-size:16px;margin:0 0 6px}.inv-info p{font-size:13px;margin:5px 0}.card-actions{display:flex;gap:8px;margin-top:12px}.card-actions button{flex:1;padding:9px 7px;font-size:12px}
+.status{display:inline-block;border-radius:20px;padding:4px 9px;background:#edf8ef;color:#246b36;font-size:11px}.status.off{background:#f4eeee;color:#805d5d}
+.preview{display:none;width:100%;max-height:230px;object-fit:contain;border-radius:10px;margin-top:12px;background:#faf5f5}
+.small{font-size:12px;margin-top:28px;color:#8c817b;text-align:center}
+@media(max-width:600px){body{padding:10px}.panel{margin:8px auto;padding:20px 16px}.form-grid{grid-template-columns:1fr}.full{grid-column:auto}.tabs button{flex:1}.brand strong{font-size:30px}}
 </style>
 </head>
 <body>
@@ -23,27 +36,54 @@ button{width:100%;border:0;border-radius:10px;padding:14px;background:var(--wine
   <div class="brand"><strong>VOWORA</strong><span>INVITATION ALBUM</span></div>
   <section id="login">
     <h1>Admin Login</h1>
-    <p>VOWORA පරිපාලන පද්ධතියට පිවිසෙන්න.</p>
+    <p style="text-align:center">VOWORA පරිපාලන පද්ධතියට පිවිසෙන්න.</p>
     <form id="loginForm">
-      <label for="email">Admin Email</label>
-      <input id="email" type="email" autocomplete="username" placeholder="admin@example.com" required>
-      <label for="password">Password</label>
-      <input id="password" type="password" autocomplete="current-password" placeholder="Password" required>
-      <button id="loginBtn" type="submit">Login</button>
+      <label for="email">Admin Email</label><input id="email" type="email" autocomplete="username" placeholder="admin@example.com" required>
+      <label for="password">Password</label><input id="password" type="password" autocomplete="current-password" placeholder="Password" required>
+      <button class="login-btn" id="loginBtn" type="submit">Login</button>
     </form>
     <div id="message" role="status"></div>
   </section>
+
   <section id="dashboard">
-    <h2>Login සාර්ථකයි</h2>
-    <p id="welcome"></p>
-    <p>Admin authentication සම්බන්ධතාවය සාර්ථකයි. Invitation management කොටස ඊළඟ අදියරේදී එක් කරනු ඇත.</p>
-    <button id="logoutBtn" type="button">Logout</button>
+    <div class="welcome"><h2>Admin Dashboard</h2><p id="welcome"></p></div>
+    <div class="tabs">
+      <button type="button" class="active" data-tab="manageTab">Invitation Cards</button>
+      <button type="button" data-tab="addTab" id="newInviteBtn">＋ අලුත් Invitation එකක්</button>
+    </div>
+
+    <section id="manageTab" class="tab-panel active">
+      <h2>ඔබගේ Invitation Cards</h2>
+      <p>Website එකට එකතු කළ සහ සඟවා ඇති Invitation Cards මෙතැනින් කළමනාකරණය කරන්න.</p>
+      <div id="cardList" class="card-list"><p>Cards ලබාගනිමින්...</p></div>
+    </section>
+
+    <section id="addTab" class="tab-panel">
+      <h2 id="formHeading">අලුත් Invitation Card එකක් එකතු කරන්න</h2>
+      <p>පහත විස්තර පුරවා Save කළ විට Invitation Card එක Firestore හි සුරැකේ.</p>
+      <form id="inviteForm">
+        <div class="form-grid">
+          <div><label for="title">Invitation නම *</label><input id="title" maxlength="90" placeholder="උදා: Elegant Wedding" required></div>
+          <div><label for="category">Category *</label><select id="category" required><option value="wedding">Wedding</option><option value="engagement">Engagement</option><option value="birthday">Birthday</option><option value="anniversary">Anniversary</option><option value="other">Other</option></select></div>
+          <div><label for="price">මිල (රු.)</label><input id="price" type="number" min="0" step="0.01" placeholder="උදා: 2500"></div>
+          <div><label for="imageUrl">Card පින්තූර URL *</label><input id="imageUrl" type="url" placeholder="https://..." required></div>
+          <div class="full"><img id="imagePreview" class="preview" alt="Invitation preview"></div>
+          <div class="full"><label for="description">විස්තර</label><textarea id="description" rows="4" maxlength="1000" placeholder="Invitation එක පිළිබඳ විස්තර..."></textarea></div>
+          <div class="full"><label><input id="isActive" type="checkbox" checked style="width:auto;margin-right:8px"> Website එකේ පෙන්වන්න (Active)</label></div>
+        </div>
+        <div class="actions"><button id="saveBtn" type="submit">Save Invitation Card</button><button class="secondary" id="cancelBtn" type="button">Cancel</button></div>
+      </form>
+      <div id="formMessage" role="status" style="margin-top:14px"></div>
+    </section>
+    <div class="actions" style="justify-content:flex-end"><button class="secondary" id="logoutBtn" type="button">Logout</button></div>
   </section>
   <div class="small">Powered by SriHarsha Digital</div>
 </main>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDocs, query, where, updateDoc, deleteDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBodeTb_8XTiVO4ABEI8M5Ea30gFXrfrGc",
@@ -55,51 +95,93 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const loginSection = document.getElementById("login");
-const dashboard = document.getElementById("dashboard");
-const message = document.getElementById("message");
-const loginBtn = document.getElementById("loginBtn");
+const db = getFirestore(app);
+const $ = id => document.getElementById(id);
+let editingId = null;
 
-function showMessage(text) {
-  message.textContent = text;
-  message.className = "";
-  message.style.display = "block";
+function showLoginMessage(text){$('message').textContent=text;$('message').className='';$('message').style.display='block';}
+function showFormMessage(text,ok=false){$('formMessage').textContent=text;$('formMessage').style.color=ok?'#246b36':'#a83c45';}
+function openTab(id){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id===id));
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
 }
-onAuthStateChanged(auth, user => {
-  if (user) {
-    loginSection.style.display = "none";
-    dashboard.style.display = "block";
-    document.getElementById("welcome").textContent = user.email || "Admin";
-  } else {
-    dashboard.style.display = "none";
-    loginSection.style.display = "block";
-  }
+document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>openTab(b.dataset.tab)));
+function resetForm(){
+  $('inviteForm').reset();$('isActive').checked=true;editingId=null;
+  $('formHeading').textContent='අලුත් Invitation Card එකක් එකතු කරන්න';
+  $('saveBtn').textContent='Save Invitation Card';$('imagePreview').style.display='none';$('imagePreview').src='';
+  showFormMessage('');
+}
+$('cancelBtn').addEventListener('click',()=>{resetForm();openTab('manageTab');});
+$('newInviteBtn').addEventListener('click',resetForm);
+$('imageUrl').addEventListener('input',()=>{
+  const url=$('imageUrl').value.trim();
+  if(url){$('imagePreview').src=url;$('imagePreview').style.display='block';}
+  else $('imagePreview').style.display='none';
 });
-document.getElementById("loginForm").addEventListener("submit", async event => {
-  event.preventDefault();
-  message.style.display = "none";
-  loginBtn.disabled = true;
-  loginBtn.textContent = "Please wait...";
-  try {
-    await signInWithEmailAndPassword(auth,
-      document.getElementById("email").value.trim(),
-      document.getElementById("password").value);
-  } catch (error) {
-    const errors = {
-      "auth/invalid-credential": "Email හෝ Password වැරදියි.",
-      "auth/user-not-found": "මෙම Email එකට Admin ගිණුමක් නැහැ.",
-      "auth/wrong-password": "Password එක වැරදියි.",
-      "auth/invalid-email": "නිවැරදි Email ලිපිනයක් ඇතුළත් කරන්න.",
-      "auth/too-many-requests": "උත්සාහයන් වැඩියි. ටික වේලාවකින් නැවත උත්සාහ කරන්න."
-    };
-    showMessage(errors[error.code] || "Login අසාර්ථකයි. Firebase Authentication සැකසුම් පරීක්ෂා කරන්න.");
-  } finally {
-    loginBtn.disabled = false;
-    loginBtn.textContent = "Login";
-  }
+$('loginForm').addEventListener('submit',async event=>{
+  event.preventDefault();$('message').style.display='none';$('loginBtn').disabled=true;$('loginBtn').textContent='Please wait...';
+  try{await signInWithEmailAndPassword(auth,$('email').value.trim(),$('password').value);}
+  catch(error){
+    const errors={'auth/invalid-credential':'Email හෝ Password වැරදියි.','auth/user-not-found':'මෙම Email එකට Admin ගිණුමක් නැහැ.','auth/wrong-password':'Password එක වැරදියි.','auth/invalid-email':'නිවැරදි Email ලිපිනයක් ඇතුළත් කරන්න.','auth/too-many-requests':'උත්සාහයන් වැඩියි. ටික වේලාවකින් නැවත උත්සාහ කරන්න.'};
+    showLoginMessage(errors[error.code]||'Login අසාර්ථකයි. නැවත උත්සාහ කරන්න.');
+  }finally{$('loginBtn').disabled=false;$('loginBtn').textContent='Login';}
 });
-document.getElementById("logoutBtn").addEventListener("click", async () => {
-  await signOut(auth);
+onAuthStateChanged(auth,async user=>{
+  if(user){
+    $('login').style.display='none';$('dashboard').style.display='block';$('welcome').textContent=user.email||'Admin';
+    await loadInvitations();
+  }else{$('dashboard').style.display='none';$('login').style.display='block';}
+});
+$('logoutBtn').addEventListener('click',()=>signOut(auth));
+
+async function loadInvitations(){
+  const list=$('cardList');list.innerHTML='<p>Cards ලබාගනිමින්...</p>';
+  try{
+    const q=query(collection(db,'invitations'),where('createdBy','==',auth.currentUser.uid));
+    const snap=await getDocs(q);
+    if(snap.empty){list.innerHTML='<p class="muted">තවම Invitation Cards එකතු කරලා නැහැ. “＋ අලුත් Invitation එකක්” ඔබා පළමු Card එක එකතු කරන්න.</p>';return;}
+    const items=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+    list.replaceChildren();
+    items.forEach(item=>{
+      const card=document.createElement('article');card.className='inv-card';
+      const img=document.createElement('img');img.src=item.imageUrl||'';img.alt=item.title||'Invitation';img.loading='lazy';img.onerror=()=>{img.style.display='none';};
+      const info=document.createElement('div');info.className='inv-info';
+      const title=document.createElement('h3');title.textContent=item.title||'Untitled';
+      const desc=document.createElement('p');desc.textContent=item.description||item.category||'';
+      const price=document.createElement('p');price.textContent='මිල: රු. '+(Number(item.price)||0).toLocaleString('en-US');
+      const status=document.createElement('span');status.className='status'+(item.isActive?'':' off');status.textContent=item.isActive?'Website එකේ පෙන්වයි':'සඟවා ඇත';
+      const actions=document.createElement('div');actions.className='card-actions';
+      const edit=document.createElement('button');edit.textContent='Edit';edit.addEventListener('click',()=>editInvitation(item));
+      const del=document.createElement('button');del.textContent='Delete';del.className='danger';del.addEventListener('click',()=>removeInvitation(item));
+      actions.append(edit,del);info.append(title,desc,price,status,actions);card.append(img,info);list.append(card);
+    });
+  }catch(error){list.innerHTML='<p>Cards ලබාගැනීමට නොහැකි වුණා. Firestore Rules publish කර තිබේදැයි පරීක්ෂා කරන්න. ('+error.code+')</p>';}
+}
+function editInvitation(item){
+  editingId=item.id;$('title').value=item.title||'';$('category').value=item.category||'wedding';
+  $('price').value=item.price??'';$('imageUrl').value=item.imageUrl||'';$('description').value=item.description||'';
+  $('isActive').checked=item.isActive===true;$('formHeading').textContent='Invitation Card එක Edit කරන්න';
+  $('saveBtn').textContent='Update Invitation Card';
+  if(item.imageUrl){$('imagePreview').src=item.imageUrl;$('imagePreview').style.display='block';}
+  openTab('addTab');showFormMessage('');
+}
+async function removeInvitation(item){
+  if(!confirm('"'+(item.title||'මෙම Card එක')+'" Delete කරන්නද?'))return;
+  try{await deleteDoc(doc(db,'invitations',item.id));await loadInvitations();}
+  catch(error){alert('Delete කළ නොහැක. Firestore Rules පරීක්ෂා කරන්න.');}
+}
+$('inviteForm').addEventListener('submit',async event=>{
+  event.preventDefault();const user=auth.currentUser;if(!user)return;
+  const data={title:$('title').value.trim(),category:$('category').value,description:$('description').value.trim(),imageUrl:$('imageUrl').value.trim(),price:Number($('price').value)||0,isActive:$('isActive').checked,createdBy:user.uid,updatedAt:serverTimestamp()};
+  if(!data.title||!data.imageUrl){showFormMessage('අවශ්‍ය තොරතුරු පුරවන්න.');return;}
+  $('saveBtn').disabled=true;$('saveBtn').textContent='Saving...';
+  try{
+    if(editingId){await updateDoc(doc(db,'invitations',editingId),{...data,createdBy:user.uid});showFormMessage('Invitation Card එක Update කළා.',true);}
+    else{await addDoc(collection(db,'invitations'),{...data,createdAt:serverTimestamp()});showFormMessage('අලුත් Invitation Card එක සාර්ථකව Save කළා.',true);}
+    await loadInvitations();resetForm();openTab('manageTab');
+  }catch(error){showFormMessage('Save කළ නොහැක. Firestore Rules publish කර තිබේදැයි පරීක්ෂා කරන්න. ('+error.code+')');}
+  finally{$('saveBtn').disabled=false;$('saveBtn').textContent=editingId?'Update Invitation Card':'Save Invitation Card';}
 });
 </script>
 </body>
