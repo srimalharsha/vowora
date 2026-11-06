@@ -6,6 +6,11 @@ service cloud.firestore {
         && request.auth.token.email == "srimalharsha@gmail.com";
     }
 
+    match /galleryIndex/{itemId} {
+      allow get, list: if true;
+      allow create, update, delete: if isVoworaAdmin();
+    }
+
     match /invitations/{invitationId} {
       allow get, list: if
         (isVoworaAdmin() && resource.data.createdBy == request.auth.uid)
