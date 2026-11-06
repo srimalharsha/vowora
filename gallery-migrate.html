@@ -4,7 +4,7 @@ body{font:15px Arial;background:#fffaf8;color:#302a27;padding:20px}.box{max-widt
 </style></head><body><main class="box"><h1>VOWORA · Cloudinary Image Migration</h1><p>මෙය පැරණි Wedding සහ Event Images Cloudinary වෙත ආරක්ෂිතව Upload කර Firestore එකේ Image URL පමණක් තබයි. Wedding designs, guest links සහ invitation data වෙනස් නොකරයි.</p><div class="note">වැදගත්: Upload සාර්ථක වූ පසුව පමණක් අදාළ Firestore image field එක URL එකෙන් යාවත්කාලීන කරයි. දැනටමත් Cloudinary URL ඇති Images නැවත Upload නොකරයි. මෙම පිටුව එක්වරක් ක්‍රියාත්මක කරන්න.</div><section id="login"><input id="email" type="email" placeholder="Admin Email"><input id="password" type="password" placeholder="Password"><button id="loginBtn">Admin Login</button></section><section id="work" hidden><button id="runBtn">Migrate Existing Images to Cloudinary</button><p id="log"></p></section></main><script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
 import{getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-import{getFirestore,collection,getDocs,doc,updateDoc,setDoc,getDoc,serverTimestamp}from"https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import{getFirestore,collection,getDocs,doc,updateDoc,setDoc,getDoc,serverTimestamp,query,where}from"https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 import{uploadDataUrl,galleryThumbUrl}from"./cloudinary.js";
 const cfg={apiKey:"AIzaSyBodeTb_8XTiVO4ABEI8M5Ea30gFXrfrGc",authDomain:"vowora-6b0d1.firebaseapp.com",projectId:"vowora-6b0d1",storageBucket:"vowora-6b0d1.firebasestorage.app",messagingSenderId:"645328995192",appId:"1:645328995192:web:f8a6a8f3bc07f7f0dffe8d"};
 const app=initializeApp(cfg,"voworaCloudinaryMigration"),auth=getAuth(app),db=getFirestore(app),$=id=>document.getElementById(id);
@@ -19,7 +19,7 @@ $("runBtn").onclick=async()=>{const b=$("runBtn");b.disabled=true;uploadedCount=
  $("log").textContent="Wedding records: "+(updatedDocs)+" updated · Images uploaded: "+uploadedCount;
  }
  $("log").textContent+="\nEvent Images පරීක්ෂා කරමින්...";
- const events=await getDocs(collection(db,"eventInvitations"));
+ const events=await getDocs(query(collection(db,"eventInvitations"),where("createdBy","==",auth.currentUser.uid)));
  for(const d of events.docs){const x=d.data();let image=x.image||"";if(image.startsWith("data:image/")){image=await cloudify(image,"events");await updateDoc(doc(db,"eventInvitations",d.id),{image});updatedDocs++}if(x.isActive===true){await setDoc(doc(db,"galleryIndex",d.id),{kind:"event",category:x.eventType||"other",title:x.title||"Special Event",hostName:x.hostName||"",eventDate:x.eventDate||"",venue:x.venue||"",thumbnail:galleryThumbUrl(image),active:true,updatedAt:serverTimestamp()},{merge:true})}}
  $("log").textContent="සාර්ථකයි!\nCloudinary වෙත Upload කළ Images: "+uploadedCount+"\nයාවත්කාලීන කළ Wedding/Event records: "+updatedDocs+"\nදැන් VOWORA Gallery එක විවෘත කර පරීක්ෂා කරන්න.";
  }catch(e){$("log").textContent="Migration එක අතරමඟ නතර වුණා. Error: "+(e.code||e.message)+"\nUpload වුණු Images Cloudinary තුළ පවතී; නැවත Run කළ විට දැනටමත් URL ඇති Images නැවත Upload නොවේ."}finally{b.disabled=false}};
