@@ -63,6 +63,29 @@ service cloud.firestore {
       }
     }
     
+    // Customer master-link tokens are kept outside public Event documents.
+    match /eventInvitationManagers/{managerToken} {
+      allow get, list: if false;
+      allow create, update, delete: if isVoworaAdmin();
+      match /guests/{guestId} {
+        function managerEventId() {
+          return get(/databases/$(database)/documents/eventInvitationManagers/$(managerToken)).data.eventId;
+        }
+        function managerIsValid() {
+          return exists(/databases/$(database)/documents/eventInvitationManagers/$(managerToken))
+            && exists(/databases/$(database)/documents/eventInvitations/$(managerEventId()))
+            && get(/databases/$(database)/documents/eventInvitations/$(managerEventId())).data.isActive == true;
+        }
+        allow get, list: if managerIsValid();
+        allow create, update: if managerIsValid()
+          && request.resource.data.eventId == managerEventId()
+          && request.resource.data.guestName is string
+          && request.resource.data.guestName.size() > 0
+          && request.resource.data.guestName.size() <= 100;
+        allow delete: if managerIsValid();
+      }
+    }
+
     // Event invitations are separate from all Wedding collections.
     match /eventInvitations/{eventId} {
       allow get, list: if (isVoworaAdmin() && resource.data.createdBy == request.auth.uid)
@@ -75,24 +98,6 @@ service cloud.firestore {
       allow delete: if isVoworaAdmin()
         && resource.data.createdBy == request.auth.uid;
 
-      // Each birthday guest receives a separate, unguessable invitation link.
-      match /guests/{guestId} {
-        function eventIsActive() {
-          return exists(/databases/$(database)/documents/eventInvitations/$(eventId))
-            && get(/databases/$(database)/documents/eventInvitations/$(eventId)).data.isActive == true;
-        }
-        function eventIsOwnedByAdmin() {
-          return isVoworaAdmin()
-            && get(/databases/$(database)/documents/eventInvitations/$(eventId)).data.createdBy == request.auth.uid;
-        }
-        allow get: if eventIsActive();
-        allow list: if eventIsOwnedByAdmin();
-        allow create, update: if eventIsOwnedByAdmin()
-          && request.resource.data.guestName is string
-          && request.resource.data.guestName.size() > 0
-          && request.resource.data.guestName.size() <= 100;
-        allow delete: if eventIsOwnedByAdmin();
-      }
     }
 
   }
