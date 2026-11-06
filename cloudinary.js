@@ -21,7 +21,7 @@ export async function uploadDataUrl(value, folder = "vowora") {
 }
 
 export async function uploadAudioFile(file, folder = "music") {
-  if (!file || (!file.type.startsWith("audio/") && !/\\.mp3$/i.test(file.name || ""))) throw new Error("කරුණාකර MP3 Audio File එකක් තෝරන්න.");
+  if (!file || (!file.type.startsWith("audio/") && !/\.mp3$/i.test(file.name || ""))) throw new Error("කරුණාකර MP3 Audio File එකක් තෝරන්න.");
   if (file.size > 10 * 1024 * 1024) throw new Error("Music File එක 10 MB ට වඩා කුඩා විය යුතුයි.");
   const form = new FormData(); form.append("file", file, file.name || "vowora-music.mp3"); form.append("upload_preset", CLOUDINARY_UPLOAD_PRESET); form.append("folder", folder.startsWith("vowora/") ? folder : "vowora/" + folder);
   const response = await fetch("https://api.cloudinary.com/v1_1/" + CLOUDINARY_CLOUD_NAME + "/video/upload", { method: "POST", body: form });
