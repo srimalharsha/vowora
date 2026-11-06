@@ -87,10 +87,11 @@ service cloud.firestore {
         }
         allow get: if eventIsActive();
         allow list: if eventIsOwnedByAdmin();
-        allow create, update, delete: if eventIsOwnedByAdmin()
+        allow create, update: if eventIsOwnedByAdmin()
           && request.resource.data.guestName is string
           && request.resource.data.guestName.size() > 0
           && request.resource.data.guestName.size() <= 100;
+        allow delete: if eventIsOwnedByAdmin();
       }
     }
 
