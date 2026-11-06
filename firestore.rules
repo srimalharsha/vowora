@@ -83,11 +83,24 @@ service cloud.firestore {
             && get(/databases/$(database)/documents/eventInvitations/$(managerEventId())).data.isActive == true;
         }
         allow get, list: if managerIsValid();
-        allow create, update: if managerIsValid()
+        allow create: if managerIsValid()
           && request.resource.data.eventId == managerEventId()
           && request.resource.data.guestName is string
           && request.resource.data.guestName.size() > 0
-          && request.resource.data.guestName.size() <= 100;
+          && request.resource.data.guestName.size() <= 100
+          && request.resource.data.rsvpStatus == "pending"
+          && request.resource.data.attendeeCount == 0;
+        allow update: if managerIsValid()
+          && request.resource.data.eventId == resource.data.eventId
+          && request.resource.data.guestName == resource.data.guestName
+          && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(["rsvpStatus", "attendeeCount", "rsvpAt"])
+          && request.resource.data.rsvpStatus in ["yes", "no"]
+          && request.resource.data.attendeeCount is int
+          && request.resource.data.attendeeCount >= 0
+          && request.resource.data.attendeeCount <= 20
+          && ((request.resource.data.rsvpStatus == "yes" && request.resource.data.attendeeCount >= 1)
+            || (request.resource.data.rsvpStatus == "no" && request.resource.data.attendeeCount == 0));
         allow delete: if managerIsValid();
       }
     }
