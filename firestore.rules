@@ -20,6 +20,11 @@ service cloud.firestore {
     }
 
     // A private, unguessable token is the couple's master link.
+    match /publicWeddings/{weddingId} {
+      allow get, list: if true;
+      allow create, update, delete: if isVoworaAdmin();
+    }
+
     match /couplePortals/{portalToken} {
       allow get: if true;
       allow list: if isVoworaAdmin()
