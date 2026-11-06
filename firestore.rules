@@ -74,6 +74,24 @@ service cloud.firestore {
         && request.resource.data.createdBy == request.auth.uid;
       allow delete: if isVoworaAdmin()
         && resource.data.createdBy == request.auth.uid;
+
+      // Each birthday guest receives a separate, unguessable invitation link.
+      match /guests/{guestId} {
+        function eventIsActive() {
+          return exists(/databases/$(database)/documents/eventInvitations/$(eventId))
+            && get(/databases/$(database)/documents/eventInvitations/$(eventId)).data.isActive == true;
+        }
+        function eventIsOwnedByAdmin() {
+          return isVoworaAdmin()
+            && get(/databases/$(database)/documents/eventInvitations/$(eventId)).data.createdBy == request.auth.uid;
+        }
+        allow get: if eventIsActive();
+        allow list: if eventIsOwnedByAdmin();
+        allow create, update, delete: if eventIsOwnedByAdmin()
+          && request.resource.data.guestName is string
+          && request.resource.data.guestName.size() > 0
+          && request.resource.data.guestName.size() <= 100;
+      }
     }
 
   }
