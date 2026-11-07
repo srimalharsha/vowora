@@ -439,11 +439,19 @@ function setupInvitationMusic(data){
  const audio=$("invitationMusic"),button=$("musicToggle"),url=String(data?.musicUrl||"").trim();
  if(!audio||!button)return;
  if(!url){audio.pause();audio.removeAttribute("src");button.hidden=true;return}
- audio.src=url;audio.loop=true;button.hidden=false;
+ // Every invitation page load starts the selected track from the beginning.
+ // Do not persist a previous pause state between visits.
+ audio.pause();
+ audio.src=url;
+ audio.loop=true;
+ audio.currentTime=0;
+ audio.load();
+ button.hidden=false;
  const sync=()=>{const playing=!audio.paused;button.textContent=playing?"Ⅱ":"▶";button.setAttribute("aria-label",playing?"Pause invitation music":"Play invitation music");button.title=playing?"Pause music":"Play music"};
  button.onclick=async()=>{if(audio.paused){try{await audio.play();sync()}catch(e){sync()}}else{audio.pause();sync()}};
+ audio.onplay=sync;
+ audio.onpause=sync;
  audio.play().then(sync).catch(()=>{sync();button.title="Tap to play invitation music"});
- audio.addEventListener("play",sync);audio.addEventListener("pause",sync);
 }
 let weddingCountdownTimer=null;
 function renderWeddingCountdown(data){
