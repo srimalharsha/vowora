@@ -52,13 +52,31 @@ service cloud.firestore {
           && request.resource.data.familyNames is string
           && request.resource.data.rsvpStatus == "pending"
           && request.resource.data.attendeeCount == 0;
+        // Master-link owner can correct guest names without changing RSVP data.
+        // Guest links can still update only their own RSVP response.
         allow update: if portalActive()
-          && request.resource.data.diff(resource.data).affectedKeys()
-            .hasOnly(["rsvpStatus", "attendeeCount", "rsvpAt"])
-          && request.resource.data.rsvpStatus in ["yes", "no"]
-          && request.resource.data.attendeeCount is int
-          && request.resource.data.attendeeCount >= 0
-          && request.resource.data.attendeeCount <= 20;
+          && (
+            (
+              request.resource.data.diff(resource.data).affectedKeys()
+                .hasOnly(["guestName", "familyNames"])
+              && request.resource.data.guestName is string
+              && request.resource.data.guestName.size() > 0
+              && request.resource.data.guestName.size() <= 90
+              && request.resource.data.familyNames is string
+              && request.resource.data.familyNames.size() <= 180
+              && request.resource.data.rsvpStatus == resource.data.rsvpStatus
+              && request.resource.data.attendeeCount == resource.data.attendeeCount
+            )
+            ||
+            (
+              request.resource.data.diff(resource.data).affectedKeys()
+                .hasOnly(["rsvpStatus", "attendeeCount", "rsvpAt"])
+              && request.resource.data.rsvpStatus in ["yes", "no"]
+              && request.resource.data.attendeeCount is int
+              && request.resource.data.attendeeCount >= 0
+              && request.resource.data.attendeeCount <= 20
+            )
+          );
         allow delete: if isVoworaAdmin();
       }
     }
