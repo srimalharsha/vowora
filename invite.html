@@ -1016,7 +1016,28 @@ function renderWeddingScrollStory(data){
  section.hidden=false;
 }
 function renderAdvertisementPage(data){const section=$("advertisementPage"),ads=data?.advertisementPage||{};if(!section)return;const defs=[{key:"bridalDresser",card:"adCardBridal",name:"adNameBridal",wa:"adWhatsappBridal",fb:"adFacebookBridal"},{key:"groomDresser",card:"adCardGroom",name:"adNameGroom",wa:"adWhatsappGroom",fb:"adFacebookGroom"},{key:"photographer",card:"adCardPhoto",name:"adNamePhoto",wa:"adWhatsappPhoto",fb:"adFacebookPhoto"},{key:"invitationDesigner",card:"adCardDesign",name:"adNameDesign",wa:"adWhatsappDesign",fb:"adFacebookDesign"}];let visible=0;for(const item of defs){const v=ads[item.key]||{},card=$(item.card),name=$(item.name),wa=$(item.wa),fb=$(item.fb),shown=v.enabled!==false&&Boolean(String(v.name||"").trim()||String(v.whatsapp||"").trim()||String(v.facebook||"").trim());card.hidden=!shown;if(!shown)continue;visible++;name.textContent=v.name||"";const digits=String(v.whatsapp||"").replace(/\D/g,"");wa.href=digits?"https://wa.me/"+digits:"#";wa.hidden=!digits;const raw=String(v.facebook||"").trim(),safe=/^https?:\/\//i.test(raw)?raw:(raw?"https://"+raw.replace(/^\/+/, ""):"");fb.href=safe||"#";fb.hidden=!safe}section.hidden=visible===0}
-function setupWelcomeScreen(data,guestData,isPersonalGuest){const template=String(data?.welcomeTemplate||"").trim();const section=$("welcomeScreen");if(!section||!["dreamy-night","classic-romance","romantic-floral","luxury-gold","premium-cinematic","royal-red","ivory-romance","emerald-royal","black-diamond","glass-envelope","floating-roses","palace-opening","obsidian-gold","starlight-noir","midnight-sapphire","royal-burgundy","champagne-pearl","rose-gold","amethyst-dusk","celestial-violet","ocean-crystal","arctic-silver","ruby-velvet","forest-emerald","desert-amber","moonlit-ivory","copper-luxe","aurora-glass","galaxy-indigo","pearl-blush","antique-bronze","diamond-frost"].includes(template))return;section.className="welcome-screen "+template;section.dataset.welcomeTemplate=template;section.style.setProperty("--welcome-overlay",String(1-Math.max(0,Math.min(100,Number(data.welcomeOverlayOpacity??45)))/100));$("welcomeBride").textContent=data.brideName||"";$("welcomeGroom").textContent=data.groomName||"";const greeting=$("welcomeGuestGreeting"),guestName=String(guestData?.guestName||"").trim();if(greeting){greeting.textContent=isPersonalGuest&&guestName?"Welcome, "+guestName+"!":"";greeting.hidden=!(isPersonalGuest&&guestName)}const photo=$("welcomeScreenPhoto"),url=String(data.welcomeCoupleImageUrl||"").trim();if(url){photo.src=url;photo.hidden=false;photo.style.setProperty("opacity",String(1-Math.max(0,Math.min(100,Number(data.welcomeCoupleOpacity??0)))/100))}else{photo.removeAttribute("src");photo.hidden=true}section.hidden=false;$("openInvitation").onclick=async()=>{section.hidden=true;window.scrollTo({top:0,behavior:"smooth"});const audio=$("invitationMusic");if(audio&&audio.src){try{audio.pause();audio.currentTime=0;await audio.play()}catch(e){const btn=$("musicToggle");if(btn){btn.hidden=false;btn.title="Tap to play invitation music"}}}}}
+function setupWelcomeScreen(data,guestData,isPersonalGuest){
+ const section=$("welcomeScreen");
+ if(!section)return;
+ const allowed=["dreamy-night","classic-romance","romantic-floral","luxury-gold","premium-cinematic","royal-red","ivory-romance","emerald-royal","black-diamond","glass-envelope","floating-roses","palace-opening","obsidian-gold","starlight-noir","midnight-sapphire","royal-burgundy","champagne-pearl","rose-gold","amethyst-dusk","celestial-violet","ocean-crystal","arctic-silver","ruby-velvet","forest-emerald","desert-amber","moonlit-ivory","copper-luxe","aurora-glass","galaxy-indigo","pearl-blush","antique-bronze","diamond-frost"];
+ const requested=String(data?.welcomeTemplate||"").trim();
+ if(requested==="none"){section.hidden=true;return}
+ // Older invitations may not have a saved template. Never silently leave the welcome layer blank.
+ const template=allowed.includes(requested)?requested:"obsidian-gold";
+ section.className="welcome-screen "+template;
+ section.dataset.welcomeTemplate=template;
+ section.style.setProperty("--welcome-overlay",String(1-Math.max(0,Math.min(100,Number(data?.welcomeOverlayOpacity??45)))/100));
+ const bride=$("welcomeBride"),groom=$("welcomeGroom");
+ if(bride)bride.textContent=data?.brideName||"";
+ if(groom)groom.textContent=data?.groomName||"";
+ const greeting=$("welcomeGuestGreeting"),guestName=String(guestData?.guestName||"").trim();
+ if(greeting){greeting.textContent=isPersonalGuest&&guestName?"Welcome, "+guestName+"!":"";greeting.hidden=!(isPersonalGuest&&guestName)}
+ const photo=$("welcomeScreenPhoto"),url=String(data?.welcomeCoupleImageUrl||"").trim();
+ if(photo){if(url){photo.src=url;photo.hidden=false;photo.style.setProperty("opacity",String(1-Math.max(0,Math.min(100,Number(data?.welcomeCoupleOpacity??0)))/100))}else{photo.removeAttribute("src");photo.hidden=true}}
+ section.hidden=false;
+ const open=$("openInvitation");
+ if(open)open.onclick=async()=>{section.hidden=true;window.scrollTo({top:0,behavior:"smooth"});const audio=$("invitationMusic");if(audio&&audio.src){try{audio.pause();audio.currentTime=0;await audio.play()}catch(e){const btn=$("musicToggle");if(btn){btn.hidden=false;btn.title="Tap to play invitation music"}}}};
+}
 function setupInvitationMusic(data){
  const audio=$("invitationMusic"),button=$("musicToggle"),url=String(data?.musicUrl||"").trim();
  if(!audio||!button)return;
