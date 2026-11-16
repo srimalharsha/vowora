@@ -1056,7 +1056,8 @@ function setupInvitationMusic(data){
  audio.onpause=sync;
  audio.play().then(sync).catch(()=>{sync();button.title="Tap to play invitation music"});
 }
-function formatEventTime(value){const raw=String(value||"").trim();const match=raw.match(/^(\d{1,2}):(\d{2})$/);if(!match)return raw;const hour=Number(match[1]),minute=Number(match[2]);if(hour>23||minute>59)return raw;const period=hour>=12?"PM":"AM";const hour12=hour%12||12;return String(hour12).padStart(2,"0")+":"+match[2]+" "+period}\n let weddingCountdownTimer=null;
+function formatEventTime(value){const raw=String(value||"").trim();const match=raw.match(/^(\d{1,2}):(\d{2})$/);if(!match)return raw;const hour=Number(match[1]),minute=Number(match[2]);if(hour>23||minute>59)return raw;const period=hour>=12?"PM":"AM";const hour12=hour%12||12;return String(hour12).padStart(2,"0")+":"+match[2]+" "+period}
+ let weddingCountdownTimer=null;
 function renderWeddingCountdown(data){
  const box=$("weddingCountdown");if(!box||!data)return;
  if(weddingCountdownTimer){clearInterval(weddingCountdownTimer);weddingCountdownTimer=null}
